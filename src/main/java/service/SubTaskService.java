@@ -15,4 +15,6 @@ public interface SubTaskService {
     List<SubTask> findAll();
 
     SubTask findById(int id);
+
+    SubTask findByName(String subTaskName);
 }

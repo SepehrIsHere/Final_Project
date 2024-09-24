@@ -1,21 +1,26 @@
 package service.impl;
 
 import entities.Order;
+import enumerations.OrderStatus;
 import repository.OrderRepository;
 import service.OrderService;
+import util.ValidationUtil;
 
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final ValidationUtil validationUtil;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ValidationUtil validationUtil) {
         this.orderRepository = orderRepository;
+        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Order order) {
         try {
+            validationUtil.validation(order);
             orderRepository.add(order);
         } catch (Exception e) {
             System.out.println("An error occured while adding an order" + e.getMessage());
@@ -25,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void update(Order order) {
         try {
+            validationUtil.validation(order);
             orderRepository.update(order);
         } catch (Exception e) {
             System.out.println("An error occured while updating an order" + e.getMessage());
@@ -54,6 +60,16 @@ public class OrderServiceImpl implements OrderService {
     public Order findById(int id) {
         try {
             return orderRepository.findById(id);
+        } catch (Exception e) {
+            System.out.println("An error occured while finding an order" + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public List<Order> findByOrderStatusAndCustomer(OrderStatus orderStatus, int customerId) {
+        try {
+            orderRepository.findByOrderStatusAndCustomer(orderStatus, customerId);
         } catch (Exception e) {
             System.out.println("An error occured while finding an order" + e.getMessage());
         }

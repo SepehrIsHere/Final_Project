@@ -15,4 +15,7 @@ public interface CustomerService {
     List<Customer> findAll();
 
     Customer findById(int id);
+
+    Customer findByFirstNameAndLastName(String firstName, String lastName);
+
 }

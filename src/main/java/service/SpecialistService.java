@@ -15,4 +15,8 @@ public interface SpecialistService {
     List<Specialist> findAll();
 
     Specialist findById(int id);
+
+    Specialist findByFirstNameAndLastName(String firstName, String lastName);
+
+    boolean checkSpecialistImage(Specialist specialist);
 }

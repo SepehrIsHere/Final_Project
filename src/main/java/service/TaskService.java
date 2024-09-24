@@ -15,4 +15,6 @@ public interface TaskService {
     List<Task> findAll();
 
     Task findById(int id);
+
+    Task findByName(String name);
 }

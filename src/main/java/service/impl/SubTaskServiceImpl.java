@@ -3,19 +3,24 @@ package service.impl;
 import entities.SubTask;
 import repository.SubTaskRepository;
 import service.SubTaskService;
+import util.ValidationUtil;
 
 import java.util.List;
 
 public class SubTaskServiceImpl implements SubTaskService {
     private final SubTaskRepository subTaskRepository;
+    private final ValidationUtil validationUtil;
 
-    public SubTaskServiceImpl(SubTaskRepository subTaskRepository) {
+
+    public SubTaskServiceImpl(SubTaskRepository subTaskRepository, ValidationUtil validationUtil) {
         this.subTaskRepository = subTaskRepository;
+        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(SubTask subTask) {
         try {
+            validationUtil.validation(subTask);
             subTaskRepository.add(subTask);
         } catch (Exception e) {
             System.out.println("An error occured while adding a SubTask" + e.getMessage());
@@ -25,6 +30,7 @@ public class SubTaskServiceImpl implements SubTaskService {
     @Override
     public void update(SubTask subTask) {
         try {
+            validationUtil.validation(subTask);
             subTaskRepository.update(subTask);
         } catch (Exception e) {
             System.out.println("An error occured while updating a SubTask" + e.getMessage());
@@ -54,6 +60,16 @@ public class SubTaskServiceImpl implements SubTaskService {
     public SubTask findById(int id) {
         try {
             return subTaskRepository.findById(id);
+        } catch (Exception e) {
+            System.out.println("An error occured while finding a SubTask" + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public SubTask findByName(String subTaskName) {
+        try {
+            return subTaskRepository.findByName(subTaskName);
         } catch (Exception e) {
             System.out.println("An error occured while finding a SubTask" + e.getMessage());
         }

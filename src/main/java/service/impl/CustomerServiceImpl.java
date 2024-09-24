@@ -3,19 +3,23 @@ package service.impl;
 import entities.Customer;
 import repository.CustomerRepository;
 import service.CustomerService;
+import util.ValidationUtil;
 
 import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final ValidationUtil validationUtil;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, ValidationUtil validationUtil) {
         this.customerRepository = customerRepository;
+        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Customer customer) {
         try {
+            validationUtil.validation(customer);
             customerRepository.add(customer);
         } catch (Exception e) {
             System.out.println("An error occured while adding customer" + e.getMessage());
@@ -25,6 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void update(Customer customer) {
         try {
+            validationUtil.validation(customer);
             customerRepository.update(customer);
         } catch (Exception e) {
             System.out.println("An error occured while updating customer" + e.getMessage());
@@ -54,6 +59,16 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findById(int id) {
         try {
             return customerRepository.findById(id);
+        } catch (Exception e) {
+            System.out.println("An error occured while finding customer" + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public Customer findByFirstNameAndLastName(String firstName, String lastName) {
+        try {
+            return customerRepository.findByFirstNameAndLastName(firstName, lastName);
         } catch (Exception e) {
             System.out.println("An error occured while finding customer" + e.getMessage());
         }

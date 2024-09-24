@@ -14,4 +14,6 @@ public interface CommentService {
     List<Comment> findAll();
 
     Comment findById(int id);
+
+    List<Comment> findByCustomer(int customerId);
 }
