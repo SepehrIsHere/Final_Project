@@ -28,6 +28,7 @@ public interface AdminService {
 
     void changeDescriptionOfSubTask(SubTask subTask, String description);
 
+    void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask);
 
     void changeSpecialistStatus(Specialist specialist, SpecialistStatus specialistStatus);
 

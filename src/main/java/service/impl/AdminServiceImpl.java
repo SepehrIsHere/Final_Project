@@ -1,9 +1,7 @@
 package service.impl;
 
-import entities.Specialist;
-import entities.SubTask;
-import entities.Task;
-import entities.Users;
+import entities.*;
+import enumerations.Role;
 import enumerations.SpecialistStatus;
 import service.*;
 
@@ -29,6 +27,7 @@ public class AdminServiceImpl implements AdminService {
         } catch (Exception e) {
             System.out.println("An error occured while adding a task " + e.getMessage());
         }
+
     }
 
     @Override
@@ -121,4 +120,32 @@ public class AdminServiceImpl implements AdminService {
             System.out.println("An error occured while updating specialist status " + e.getMessage());
         }
     }
+
+    @Override
+    public void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask) {
+        try {
+            List<Specialist> specialists = subTask.getSpecialists();
+            for (Specialist s : specialists) {
+                if (s.equals(specialist)) {
+                    specialists.remove(s);
+                    subTaskService.update(subTask);
+                }
+            }
+            List<SubTask> subTasks = specialist.getSubTasks();
+            for (SubTask s : subTasks) {
+                if (s.equals(subTask)) {
+                    subTasks.remove(subTask);
+                    specialistService.update(specialist);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("An error occured while removing a subtask " + e.getMessage());
+        }
+    }
+
+    private boolean isUserAdmin(Users users) {
+        return users.getRole().equals(Role.ADMINISTRATOR) && !(users instanceof Customer) && !(users instanceof Specialist);
+    }
 }
+
+
