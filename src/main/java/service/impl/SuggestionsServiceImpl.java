@@ -10,47 +10,43 @@ import java.util.List;
 
 public class SuggestionsServiceImpl implements SuggestionsService {
     private final SuggestionsRepository suggestionsRepository;
-    private final ValidationUtil validationUtil;
 
-    public SuggestionsServiceImpl(SuggestionsRepository suggestionsRepository, ValidationUtil validationUtil) {
+    public SuggestionsServiceImpl(SuggestionsRepository suggestionsRepository) {
         this.suggestionsRepository = suggestionsRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Suggestions suggestion) {
-        try{
-            validationUtil.validation(suggestion);
+        try {
             suggestionsRepository.add(suggestion);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while adding suggestion" + e.getMessage());
         }
     }
 
     @Override
     public void update(Suggestions suggestion) {
-        try{
-            validationUtil.validation(suggestion);
+        try {
             suggestionsRepository.update(suggestion);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while updating suggestion" + e.getMessage());
         }
     }
 
     @Override
     public void delete(Suggestions suggestion) {
-        try{
+        try {
             suggestionsRepository.delete(suggestion);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while deleting suggestion" + e.getMessage());
         }
     }
 
     @Override
     public Suggestions findById(int id) {
-        try{
+        try {
             return suggestionsRepository.findById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while finding suggestion" + e.getMessage());
         }
         return null;
@@ -58,9 +54,9 @@ public class SuggestionsServiceImpl implements SuggestionsService {
 
     @Override
     public List<Suggestions> findAll() {
-        try{
+        try {
             return suggestionsRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while finding suggestions" + e.getMessage());
         }
         return null;
@@ -68,9 +64,9 @@ public class SuggestionsServiceImpl implements SuggestionsService {
 
     @Override
     public List<Suggestions> findByOrder(Order order) {
-        try{
+        try {
             suggestionsRepository.findByOrder(order);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("An error occured while finding suggestions" + e.getMessage());
         }
         return null;

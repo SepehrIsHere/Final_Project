@@ -9,18 +9,14 @@ import java.util.List;
 
 public class SubTaskServiceImpl implements SubTaskService {
     private final SubTaskRepository subTaskRepository;
-    private final ValidationUtil validationUtil;
 
-
-    public SubTaskServiceImpl(SubTaskRepository subTaskRepository, ValidationUtil validationUtil) {
+    public SubTaskServiceImpl(SubTaskRepository subTaskRepository) {
         this.subTaskRepository = subTaskRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(SubTask subTask) {
         try {
-            validationUtil.validation(subTask);
             subTaskRepository.add(subTask);
         } catch (Exception e) {
             System.out.println("An error occured while adding a SubTask" + e.getMessage());
@@ -30,7 +26,6 @@ public class SubTaskServiceImpl implements SubTaskService {
     @Override
     public void update(SubTask subTask) {
         try {
-            validationUtil.validation(subTask);
             subTaskRepository.update(subTask);
         } catch (Exception e) {
             System.out.println("An error occured while updating a SubTask" + e.getMessage());

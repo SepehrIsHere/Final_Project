@@ -9,17 +9,14 @@ import java.util.List;
 
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final ValidationUtil validationUtil;
 
-    public CommentServiceImpl(CommentRepository commentRepository,ValidationUtil validationUtil) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Comment comment) {
         try {
-            validationUtil.validation(comment);
             commentRepository.add(comment);
         } catch (Exception e) {
             System.out.println("An error occured while adding a comment" + e.getMessage());
@@ -29,7 +26,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void update(Comment comment) {
         try {
-            validationUtil.validation(comment);
             commentRepository.update(comment);
         } catch (Exception e) {
             System.out.println("An error occured while updating a comment" + e.getMessage());

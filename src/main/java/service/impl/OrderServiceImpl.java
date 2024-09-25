@@ -10,17 +10,14 @@ import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final ValidationUtil validationUtil;
 
-    public OrderServiceImpl(OrderRepository orderRepository, ValidationUtil validationUtil) {
+    public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Order order) {
         try {
-            validationUtil.validation(order);
             orderRepository.add(order);
         } catch (Exception e) {
             System.out.println("An error occured while adding an order" + e.getMessage());
@@ -30,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void update(Order order) {
         try {
-            validationUtil.validation(order);
             orderRepository.update(order);
         } catch (Exception e) {
             System.out.println("An error occured while updating an order" + e.getMessage());

@@ -9,17 +9,14 @@ import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-    private final ValidationUtil validationUtil;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, ValidationUtil validationUtil) {
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Customer customer) {
         try {
-            validationUtil.validation(customer);
             customerRepository.add(customer);
         } catch (Exception e) {
             System.out.println("An error occured while adding customer" + e.getMessage());
@@ -29,7 +26,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void update(Customer customer) {
         try {
-            validationUtil.validation(customer);
             customerRepository.update(customer);
         } catch (Exception e) {
             System.out.println("An error occured while updating customer" + e.getMessage());

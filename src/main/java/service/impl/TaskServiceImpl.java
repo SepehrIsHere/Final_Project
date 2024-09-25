@@ -9,17 +9,14 @@ import java.util.List;
 
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
-    private final ValidationUtil validationUtil;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ValidationUtil validationUtil) {
+    public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        this.validationUtil = validationUtil;
     }
 
     @Override
     public void add(Task task) {
         try {
-            validationUtil.validation(task);
             taskRepository.add(task);
         } catch (Exception e) {
             System.out.println("An error occured while adding a task" + e.getMessage());
@@ -29,7 +26,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void update(Task task) {
         try {
-            validationUtil.validation(task);
             taskRepository.update(task);
         } catch (Exception e) {
             System.out.println("An error occured while updating a task" + e.getMessage());
