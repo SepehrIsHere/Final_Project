@@ -8,4 +8,7 @@ public interface TaskRepository extends BaseEntityRepository<Task> {
     Task findById(int id);
 
     List<Task> findAll();
+
+    Task findByName(String name);
+
 }

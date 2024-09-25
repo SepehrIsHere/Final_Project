@@ -8,4 +8,6 @@ public interface SpecialistRepository extends BaseEntityRepository<Specialist> {
     Specialist findById(int id);
 
     List<Specialist> findAll();
+
+    Specialist findByFirstNameAndLastName(String firstName, String lastName);
 }

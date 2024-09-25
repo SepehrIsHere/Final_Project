@@ -1,9 +1,8 @@
 package repository.impl;
 
 import entities.Customer;
-import entities.Users;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import repository.CustomerRepository;
 
 import java.util.List;
@@ -24,5 +23,13 @@ public class CustomerRepositoryImpl<T extends Customer> extends BaseEntityReposi
     @Override
     public List<Customer> findAll() {
         return em.createQuery("SELECT c FROM Customer c", Customer.class).getResultList();
+    }
+
+    @Override
+    public Customer findByFirstNameAndLastName(String firstName, String lastName) {
+        TypedQuery<Customer> query = em.createQuery("SELECT c FROM Customer c where c.userDetails.firstName = :firstName and c.userDetails.lastName = :lastName", Customer.class);
+        query.setParameter("firstName", firstName);
+        query.setParameter("lastName", lastName);
+        return query.getSingleResult();
     }
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import entities.Order;
+import enumerations.OrderStatus;
 
 import java.util.List;
 
@@ -9,15 +10,7 @@ public interface OrderRepository extends BaseEntityRepository<Order> {
 
     List<Order> findAll();
 
-    List<Order> findWaitingForSpecialistProposalsOrders();
+    List<Order> findByOrderStatusAndCustomer(OrderStatus orderStatus, int customerId);
 
-    List<Order> findWaitingForSpecialistSelectionOrders();
 
-    List<Order> findWaitingForSpecialistArrival();
-
-    List<Order> findStartedOrders();
-
-    List<Order> findCompletedOrders();
-
-    List<Order> findPaidOrders();
 }

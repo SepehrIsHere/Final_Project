@@ -8,4 +8,6 @@ public interface SubTaskRepository extends BaseEntityRepository<SubTask> {
     SubTask findById(int id);
 
     List<SubTask> findAll();
+
+    SubTask findByName(String subTaskName);
 }
