@@ -21,4 +21,18 @@ public class ValidationUtil {
             System.out.println(object.getClass().getName() + " is valid!");
         }
     }
+
+    public void displayViolations(Object object) {
+        Set<ConstraintViolation<Object>> violations = validator.validate(object);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<Object> violation : violations) {
+                System.out.println(violation.getMessage());
+            }
+        }
+    }
+
+    public boolean isValid(Object object) {
+        Set<ConstraintViolation<Object>> violations = validator.validate(object);
+        return violations.isEmpty();
+    }
 }
