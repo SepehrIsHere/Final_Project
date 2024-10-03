@@ -21,4 +21,5 @@ public interface SpecialistRepository extends JpaRepository<Specialist, Integer>
 
     @Query("SELECT s FROM Specialist s WHERE s.firstName = :firstName AND s.lastName = :lastName")
     Specialist findByFirstNameAndLastName(@Param("firstName") String firstName, @Param("lastName") String lastName);
+
 }

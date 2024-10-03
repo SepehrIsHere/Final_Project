@@ -19,6 +19,6 @@ public interface SubTaskRepository extends JpaRepository<SubTask, Integer> {
     List<SubTask> findTasksSubTasks(@Param("task") Task task);
 
     @Query("SELECT s FROM SubTask s WHERE s.id = :id")
-    SubTask findById(@Param("id") int id);
+    SubTask findSubTaskById(@Param("id") int id);
 
 }

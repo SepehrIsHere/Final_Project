@@ -16,4 +16,5 @@ public interface SuggestionsRepository extends JpaRepository<Suggestions, Intege
 
     @Query("SELECT s FROM Suggestions s WHERE s.id = :id")
     Suggestions findById(@Param("id") int id);
+
 }

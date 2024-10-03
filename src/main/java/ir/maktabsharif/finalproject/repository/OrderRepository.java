@@ -17,9 +17,10 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM Order o WHERE o.customer = :customer")
     Order findByCustomer(@Param("customer") Customer customer);
 
-    @Query("SELECT o FROM Customer o WHERE o.id = :id")
+    @Query("SELECT o FROM Order o WHERE o.customer.id = :id")
     Order findByCustomerId(@Param("id") int id);
 
     @Query("SELECT o FROM Order o WHERE o.customer = :customer AND o.status = :status ")
     List<Order> findByCustomerAndOrderStatus(@Param("customer")Customer customer, @Param("status") OrderStatus status);
+
 }
