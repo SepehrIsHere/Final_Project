@@ -9,21 +9,18 @@ import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.repository.OrderRepository;
 import ir.maktabsharif.finalproject.service.OrderService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final ValidationUtil validationUtil;
     private final OrderRepository orderRepository;
 
-    @Autowired
-    public OrderServiceImpl(ValidationUtil validationUtil, OrderRepository orderRepository, CustomerRepository customerRepository) {
-        this.validationUtil = validationUtil;
-        this.orderRepository = orderRepository;
-    }
 
     @Override
     public void add(Order order) throws OrderOperationException {

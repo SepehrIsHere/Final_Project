@@ -5,21 +5,17 @@ import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
 import ir.maktabsharif.finalproject.service.SubTaskService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SubTaskServiceImpl implements SubTaskService {
     private final ValidationUtil validationUtil;
     private final SubTaskRepository subTaskRepository;
-
-    @Autowired
-    public SubTaskServiceImpl(ValidationUtil validationUtil, SubTaskRepository subTaskRepository) {
-        this.validationUtil = validationUtil;
-        this.subTaskRepository = subTaskRepository;
-    }
 
     @Override
     public void add(SubTask subTask) throws SubTaskOperationException {
@@ -66,7 +62,7 @@ public class SubTaskServiceImpl implements SubTaskService {
     @Override
     public SubTask findById(int id) throws SubTaskOperationException {
         try {
-            return subTaskRepository.findById(id);
+            return subTaskRepository.findSubTaskById(id);
         } catch (Exception e) {
             throw new SubTaskOperationException("An error occurred while finding a SubTask", e);
         }

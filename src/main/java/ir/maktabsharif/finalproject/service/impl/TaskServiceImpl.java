@@ -6,21 +6,17 @@ import ir.maktabsharif.finalproject.repository.TaskRepository;
 import ir.maktabsharif.finalproject.service.TaskService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ValidationUtil validationUtil;
-
-   @Autowired
-    public TaskServiceImpl(ValidationUtil validationUtil, TaskRepository taskRepository) {
-        this.validationUtil = validationUtil;
-        this.taskRepository = taskRepository;
-    }
 
     @Override
     public void add(Task task) throws TaskOperationException {
@@ -65,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task findById(int id) throws TaskOperationException {
         try {
-            return taskRepository.findById(id);
+            return taskRepository.findByTaskId(id);
         } catch (Exception e) {
             throw new TaskOperationException("An error occurred while finding a task", e);
         }
@@ -78,6 +74,10 @@ public class TaskServiceImpl implements TaskService {
         } catch (Exception e) {
             throw new TaskOperationException("An error occurred while finding a task", e);
         }
+    }
 
+    @Override
+    public void deleteAll() throws TaskOperationException {
+        taskRepository.deleteAll();
     }
 }

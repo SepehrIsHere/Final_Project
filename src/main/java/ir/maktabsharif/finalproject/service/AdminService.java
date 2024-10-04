@@ -24,7 +24,7 @@ public interface AdminService {
 
     void deleteTask(Task task);
 
-    void changeBasePriceOfSubTask(SubTask subTask, BigDecimal basePrice);
+    void changeBasePriceOfSubTask(SubTask subTask, Double basePrice);
 
     void changeDescriptionOfSubTask(SubTask subTask, String description);
 

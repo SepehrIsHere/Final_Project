@@ -6,20 +6,16 @@ import ir.maktabsharif.finalproject.exception.UserOperationException;
 import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.UsersService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
+@RequiredArgsConstructor
 public class UsersServiceImpl implements UsersService {
     private final ValidationUtil validationUtil;
     private final UsersRepository usersRepository;
-
-    @Autowired
-    public UsersServiceImpl(ValidationUtil validationUtil, UsersRepository usersRepository) {
-        this.validationUtil = validationUtil;
-        this.usersRepository = usersRepository;
-    }
 
 
     @Override
@@ -66,7 +62,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Users findById(int id) throws UserOperationException {
         try {
-            return usersRepository.findById(id);
+            return usersRepository.findUserById(id);
         } catch (Exception e) {
             throw new UserOperationException("An error occured while finding user ", e);
         }
@@ -80,4 +76,5 @@ public class UsersServiceImpl implements UsersService {
             throw new UserOperationException("An error occured while login user ", e);
         }
     }
+
 }

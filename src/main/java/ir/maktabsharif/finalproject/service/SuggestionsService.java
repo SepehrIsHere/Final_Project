@@ -2,6 +2,7 @@ package ir.maktabsharif.finalproject.service;
 
 
 import ir.maktabsharif.finalproject.entities.Order;
+import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.entities.Suggestions;
 import ir.maktabsharif.finalproject.exception.SuggestionOperationException;
 
@@ -19,4 +20,9 @@ public interface SuggestionsService {
     List<Suggestions> findAll() throws SuggestionOperationException;
 
     List<Suggestions> findByOrder(Order order) throws SuggestionOperationException;
+
+    List<Suggestions> findByOrderOrderBySpecialistScoreDesc(Order order);
+
+    List<Suggestions> findByOrderOrderBySuggestedPriceDesc(Order order);
+
 }

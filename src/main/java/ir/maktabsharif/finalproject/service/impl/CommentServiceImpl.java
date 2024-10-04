@@ -6,21 +6,16 @@ import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.repository.CommentRepository;
 import ir.maktabsharif.finalproject.service.CommentService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ValidationUtil validationUtil;
-
-    @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository,ValidationUtil validationUtil) {
-        this.commentRepository = commentRepository;
-        this.validationUtil = validationUtil;
-    }
 
     @Override
     public void add(Comment comment) {

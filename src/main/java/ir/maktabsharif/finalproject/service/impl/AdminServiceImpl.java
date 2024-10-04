@@ -9,6 +9,7 @@ import ir.maktabsharif.finalproject.service.SpecialistService;
 import ir.maktabsharif.finalproject.service.SubTaskService;
 import ir.maktabsharif.finalproject.service.TaskService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
     private final TaskService taskService;
     private final SpecialistService specialistService;
     private final SubTaskService subTaskService;
     private final ValidationUtil validationUtil;
-
-    @Autowired
-    public AdminServiceImpl(TaskService taskService, SpecialistService specialistService, SubTaskService subTaskService, ValidationUtil validationUtil) {
-        this.taskService = taskService;
-        this.specialistService = specialistService;
-        this.subTaskService = subTaskService;
-        this.validationUtil = validationUtil;
-    }
 
     @Override
     public void addTask(Task task) {
@@ -118,7 +112,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void changeBasePriceOfSubTask(SubTask subTask, BigDecimal basePrice) {
+    public void changeBasePriceOfSubTask(SubTask subTask, Double basePrice) {
         try {
             subTask.setBasePrice(basePrice);
             subTaskService.update(subTask);

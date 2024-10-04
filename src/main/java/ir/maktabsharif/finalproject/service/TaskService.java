@@ -13,6 +13,8 @@ public interface TaskService {
 
     void delete(Task task) throws TaskOperationException;
 
+    void deleteAll() throws TaskOperationException;
+
     List<Task> findAll() throws TaskOperationException;
 
     Task findById(int id) throws TaskOperationException;

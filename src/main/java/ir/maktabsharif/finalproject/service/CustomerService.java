@@ -2,7 +2,9 @@ package ir.maktabsharif.finalproject.service;
 
 
 import ir.maktabsharif.finalproject.entities.Customer;
+import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
+import ir.maktabsharif.finalproject.exception.SuggestionOperationException;
 
 import java.util.List;
 
@@ -19,4 +21,5 @@ public interface CustomerService {
 
     Customer findByFirstNameAndLastName(String firstName, String lastName) throws CustomerOperationException;
 
+    void displaySuggestionsOfOrder(Customer customer, Order order) throws SuggestionOperationException;
 }
