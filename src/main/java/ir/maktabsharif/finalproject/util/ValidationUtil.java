@@ -1,5 +1,6 @@
 package ir.maktabsharif.finalproject.util;
 
+import ir.maktabsharif.finalproject.exception.InvalidFieldValueException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -17,24 +18,8 @@ public class ValidationUtil {
             .buildValidatorFactory();
     private final Validator validator = validatorFactory.getValidator();
 
-    public void validation(Object object) {
-        Set<ConstraintViolation<Object>> violations = validator.validate(object);
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<Object> violation : violations) {
-                System.out.println(violation.getMessage());
-            }
-        } else {
-            System.out.println(object.getClass().getName() + " is valid!");
-        }
-    }
-
-    public void displayViolations(Object object) {
-        Set<ConstraintViolation<Object>> violations = validator.validate(object);
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<Object> violation : violations) {
-                System.out.println(violation.getMessage());
-            }
-        }
+    public void displayViolations(Object object) throws InvalidFieldValueException {
+      throw new InvalidFieldValueException("Objects some fields are not valid ! ");
     }
 
     public boolean isValid(Object object) {

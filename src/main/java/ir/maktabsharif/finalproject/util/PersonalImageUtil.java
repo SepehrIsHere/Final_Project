@@ -2,8 +2,6 @@ package ir.maktabsharif.finalproject.util;
 
 
 import ir.maktabsharif.finalproject.entities.Specialist;
-import ir.maktabsharif.finalproject.service.SpecialistService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -14,17 +12,11 @@ import java.io.File;
 
 @Component
 public class PersonalImageUtil {
-    private final SpecialistService specialistService;
     private static final long MAX_IMAGE_SIZE = 300 * 1024;
-
-    @Autowired
-    public PersonalImageUtil(SpecialistService specialistService) {
-        this.specialistService = specialistService;
-    }
 
     public void displayPersonalImage(Specialist specialist) {
         try {
-            if (specialistService.checkSpecialistImage(specialist)) {
+            if (specialist.getPersonalImage().length > 0) {
                 byte[] imageData = specialist.getPersonalImage();
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(imageData);
                 BufferedImage personsImage = ImageIO.read(byteArrayInputStream);
