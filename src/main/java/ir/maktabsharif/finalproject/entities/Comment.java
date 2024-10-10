@@ -27,7 +27,7 @@ public class Comment extends BaseEntity {
     @Column
     @Min(value = 0, message = "rating point cant be smaller than 0")
     @Max(value = 5, message = "rating point cant be larger than 5")
-    private double ratingPoint;
+    private Double ratingPoint;
 
     @OneToOne
     private Specialist specialist;

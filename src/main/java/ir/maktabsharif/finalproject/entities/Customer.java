@@ -19,7 +19,7 @@ public class Customer extends Users {
 
     @Column
     @Min(value = 0,message = "Credit cannot be smaller than 0")
-    private BigDecimal credit;
+    private double credit;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();

@@ -2,14 +2,11 @@ package ir.maktabsharif.finalproject.entities;
 
 import ir.maktabsharif.finalproject.enumerations.OrderStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigDecimal;
+import java.lang.Double;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,13 +18,19 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
+
+    @Column(unique = true)
+    @NotBlank(message = "Order must have a name!")
+    private String nameOfOrder;
+
     @Column
     @Min(value =  0,message = "suggested price cant be smaller than 0 ")
     @NotNull(message = "Suggested price cant be null")
-    private BigDecimal suggestedPrice;
+    private Double suggestedPrice;
 
     @Temporal(TemporalType.DATE)
     @NotNull(message = "date of service cant be null")
+    @Future(message = "the date cannot be earlier than today's date")
     private LocalDate dateOfService;
 
     @Column
@@ -43,7 +46,7 @@ public class Order extends BaseEntity {
     private SubTask subTask;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne

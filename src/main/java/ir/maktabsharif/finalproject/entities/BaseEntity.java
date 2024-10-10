@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -25,7 +26,7 @@ public class BaseEntity {
 
     @CreationTimestamp
     @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
@@ -34,7 +35,7 @@ public class BaseEntity {
     @PrePersist
     public void prePersist() {
         if (creationDate == null) {
-            creationDate = LocalDateTime.now();
+            creationDate = LocalDate.now();
         }
     }
 

@@ -37,6 +37,4 @@ public class Specialist extends Users {
     @OneToMany
     private List<Comment> comments;
 
-    @OneToOne
-    private Users users;
 }
