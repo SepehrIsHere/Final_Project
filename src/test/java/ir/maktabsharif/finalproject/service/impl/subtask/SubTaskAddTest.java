@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class SubTaskAddTest {
     @Mock
@@ -38,7 +40,8 @@ public class SubTaskAddTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         subTaskService = new SubTaskServiceImpl(validationUtil, subTaskRepository);
-        subTask = new SubTask("test subtask name",new BigDecimal(100000),"test subtask description",new Task("test task name","test task description"));
+        subTask = new SubTask("test subtask name",100000.0,"test subtask description",
+                new Task("test task name","test task description"));
     }
 
     @AfterEach

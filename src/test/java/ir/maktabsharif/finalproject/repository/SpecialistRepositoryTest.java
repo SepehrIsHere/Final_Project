@@ -10,11 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @Import(AppConfig.class)
 class SpecialistRepositoryTest {
@@ -39,7 +41,7 @@ class SpecialistRepositoryTest {
                 lastName(faker.name().lastName()).
                 email(faker.internet().emailAddress()).
                 username(faker.name().username()).
-                password(generateValidPassword()).
+                password("testpass1234").
                 role(Role.SPECIALIST).
                 specialistStatus(SpecialistStatus.PENDING_APPROVAL).build();
 

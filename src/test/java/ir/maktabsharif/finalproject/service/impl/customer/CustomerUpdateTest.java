@@ -4,6 +4,8 @@ import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
+import ir.maktabsharif.finalproject.service.OrderService;
+import ir.maktabsharif.finalproject.service.SuggestionsService;
 import ir.maktabsharif.finalproject.service.impl.CustomerServiceImpl;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
@@ -21,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class CustomerUpdateTest {
 
@@ -30,13 +34,20 @@ public class CustomerUpdateTest {
     @Mock
     private ValidationUtil validationUtil;
 
+    @Mock
+    private OrderService orderService;
+
+    @Mock
+    private SuggestionsService suggestionsService;
+
+
     @InjectMocks
     private CustomerServiceImpl customerService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        customerService = new CustomerServiceImpl(validationUtil, customerRepository);
+        customerService = new CustomerServiceImpl(validationUtil, customerRepository,orderService,suggestionsService);
     }
 
     @AfterEach

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @Import(AppConfig.class)
 class OrderRepositoryTest {
@@ -47,7 +49,7 @@ class OrderRepositoryTest {
         Task task = new Task("test task", "test task description");
         taskRepository.save(task);
 
-        SubTask subTask = new SubTask("Test subtask", new BigDecimal(10000), "test description",task);
+        SubTask subTask = new SubTask("Test subtask", 10000.0, "test description",task);
         subTaskRepository.save(subTask);
         Customer customer = Customer.builder().
                 firstName(faker.name().firstName()).
@@ -59,7 +61,7 @@ class OrderRepositoryTest {
                 .build();
         customerRepository.save(customer);
         Order order = Order.builder().
-                suggestedPrice(new BigDecimal(200000))
+                suggestedPrice(200000.0)
                 .dateOfService(LocalDate.of(2024, Month.APRIL, 12)).
                 description("test description").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
@@ -98,7 +100,7 @@ class OrderRepositoryTest {
         Task task = new Task("test task", "test task description");
         taskRepository.save(task);
 
-        SubTask subTask = new SubTask("Test subtask", new BigDecimal(10000), "test description",task);
+        SubTask subTask = new SubTask("Test subtask", 10000.0, "test description",task);
         subTaskRepository.save(subTask);
         Customer customer = Customer.builder().
                 firstName(faker.name().firstName()).
@@ -110,7 +112,7 @@ class OrderRepositoryTest {
                 .build();
         customerRepository.save(customer);
         Order order = Order.builder().
-                suggestedPrice(new BigDecimal(200000))
+                suggestedPrice(200000.0)
                 .dateOfService(LocalDate.of(2024, Month.APRIL, 12)).
                 description("test description").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
@@ -143,8 +145,12 @@ class OrderRepositoryTest {
         Task task = new Task("test task", "test task description");
         taskRepository.save(task);
 
-        SubTask subTask = new SubTask("Test subtask", new BigDecimal(10000), "test description",task);
+        SubTask subTask = new SubTask("Test subtask", 10000.0, "test description",task);
         subTaskRepository.save(subTask);
+        SubTask subTask1 = new SubTask("Test subtask1", 10000.0, "test description1",task);
+        subTaskRepository.save(subTask1);
+        SubTask subTask2 = new SubTask("Test subtask2", 10000.0, "test description2",task);
+        subTaskRepository.save(subTask2);
         Customer customer = Customer.builder().
                 firstName(faker.name().firstName()).
                 lastName(faker.name().lastName()).
@@ -155,7 +161,7 @@ class OrderRepositoryTest {
                 .build();
         customerRepository.save(customer);
         Order order = Order.builder().
-                suggestedPrice(new BigDecimal(200000))
+                suggestedPrice(200000.0)
                 .dateOfService(LocalDate.of(2024, Month.APRIL, 12)).
                 description("test description").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_PROPOSALS).
@@ -163,19 +169,19 @@ class OrderRepositoryTest {
                 customer(customer).
                 build();
         Order order1 = Order.builder().
-                suggestedPrice(new BigDecimal(200000))
+                suggestedPrice(200000.0)
                 .dateOfService(LocalDate.of(2024, Month.APRIL, 12)).
                 description("test description").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_PROPOSALS).
-                subTask(subTask).
+                subTask(subTask1).
                 customer(customer).
                 build();
         Order order2 = Order.builder().
-                suggestedPrice(new BigDecimal(200000))
+                suggestedPrice(200000.0)
                 .dateOfService(LocalDate.of(2024, Month.APRIL, 12)).
                 description("test description").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_PROPOSALS).
-                subTask(subTask).
+                subTask(subTask2).
                 customer(customer).
                 build();
         orderRepository.save(order);

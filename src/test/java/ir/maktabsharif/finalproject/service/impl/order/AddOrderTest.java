@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.time.Month;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class AddOrderTest {
     @Mock
@@ -42,7 +44,6 @@ public class AddOrderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderServiceImpl(validationUtil, orderRepository, customerRepository);
     }
 
     @AfterEach
@@ -51,9 +52,9 @@ public class AddOrderTest {
     }
 
     Order generateValidOrder() {
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         return Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(500000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 description("test description for order").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
@@ -61,9 +62,9 @@ public class AddOrderTest {
     }
 
     Order generateInvalidOrder() {
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         return Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(500000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 subTask(subTask).build();
     }

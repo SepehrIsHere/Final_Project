@@ -37,7 +37,7 @@ class SubTaskServiceImplIntegrationTest {
     @BeforeEach
     void setUp() {
         Task task = new Task("test task", "test task description");
-        validSubTask = new SubTask("test subtask", new BigDecimal(1000000), "test subtask description", task);
+        validSubTask = new SubTask("test subtask", 1000000.0, "test subtask description", task);
         subTaskService = new SubTaskServiceImpl(validationUtil, subTaskRepository);
     }
 

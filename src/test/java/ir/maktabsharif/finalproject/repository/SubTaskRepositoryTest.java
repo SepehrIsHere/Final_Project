@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +28,7 @@ public class SubTaskRepositoryTest {
     @BeforeEach
     void setUp() {
         task = new Task("Task 1", "Task description 1");
-        subTask = new SubTask("SubTask 1", new BigDecimal("100.00"), "SubTask description", task);
+        subTask = new SubTask("SubTask 1", 100.0, "SubTask description", task);
 
         taskRepository.save(task);
         subTaskRepository.save(subTask);

@@ -9,9 +9,12 @@ import ir.maktabsharif.finalproject.util.ValidationUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -20,6 +23,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class SubTaskServiceImplTest {
 
     @Mock
@@ -37,7 +42,7 @@ class SubTaskServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         subTaskService = new SubTaskServiceImpl(validationUtil, subTaskRepository);
-        subTask = new SubTask("test subtask name", new BigDecimal(100000), "test subtask description", new Task("test task name", "test task description"));
+        subTask = new SubTask("test subtask name", 100000.0, "test subtask description", new Task("test task name", "test task description"));
     }
 
     @AfterEach

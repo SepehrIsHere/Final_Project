@@ -16,11 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class UpdateCommentTest {
 
@@ -99,15 +101,15 @@ public class UpdateCommentTest {
     @Test
     void update_ShouldSaveComment_WhenCalled() {
         // Arrange
-        Comment comment = generatedValidComment(); // Mock a valid comment
-        when(commentRepository.save(comment)).thenReturn(comment); // Mock repository behavior
+        Comment comment = generatedValidComment();
+        when(commentRepository.save(comment)).thenReturn(comment);
 
         // Act
         comment.setText("updated test text! ");
-        commentService.update(comment); // Update the comment
+        commentService.update(comment);
 
         // Assert
-        verify(commentRepository, times(1)).save(comment); // Verify that save() was called once with the updated comment
+        verify(commentRepository, times(1)).save(comment);
     }
 
     @Test
@@ -120,6 +122,6 @@ public class UpdateCommentTest {
         commentService.update(comment);
 
         // Assert
-        verify(commentRepository).save(comment); // Still tried to save
+        verify(commentRepository).save(comment);
     }
 }

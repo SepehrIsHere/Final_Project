@@ -35,7 +35,7 @@ class TaskServiceImplIntegrationTest {
     @BeforeEach
     void setUp() {
         validTask =new Task("test task name","test task description");
-        taskService = new TaskServiceImpl(validationUtil, taskRepository);
+        taskService = new TaskServiceImpl(taskRepository,validationUtil);
     }
 
     @Test

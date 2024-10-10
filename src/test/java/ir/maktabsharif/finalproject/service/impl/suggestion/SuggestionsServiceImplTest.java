@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class SuggestionsServiceImplTest {
 
@@ -61,14 +63,14 @@ class SuggestionsServiceImplTest {
                 specialistStatus(SpecialistStatus.APPROVED).
                 build();
 
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         Order order = Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(10000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 subTask(subTask).build();
 
         return Suggestions.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(1000000.0).
                 suggestedDate(LocalDate.of(2024, 11, 12)).
                 workTime(LocalTime.of(10, 12)).specialist(specialist).
                 order(order).
@@ -87,14 +89,14 @@ class SuggestionsServiceImplTest {
                 specialistStatus(SpecialistStatus.APPROVED).
                 build();
 
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         Order order = Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(1000000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 subTask(subTask).build();
 
         return Suggestions.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(1000000.0).
                 order(order).
                 specialist(specialist).
                 build();

@@ -15,8 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class OrderServiceImplIntegrationTest {
 
     @Autowired
@@ -59,7 +60,7 @@ public class OrderServiceImplIntegrationTest {
     public void setup() {
         Task task = new Task("test first task", "test first description");
         taskRepository.saveAndFlush(task);
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(1000000), "test subtask desciption", task);
+        SubTask subTask = new SubTask("test subtask", 1000000.0, "test subtask desciption", task);
         subTaskRepository.saveAndFlush(subTask);
 
          customer = Customer.builder()
@@ -89,11 +90,11 @@ public class OrderServiceImplIntegrationTest {
                 specialist(specialist).
                 customer(customer).
                 subTask(subTask).
-                suggestedPrice(new BigDecimal(10000)).
+                suggestedPrice(100000.0).
                 dateOfService(LocalDate.of(2024, 10, 12)).
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
                 description("test order description").build();
-        orderService = new OrderServiceImpl(validationUtil, orderRepository, customerRepository);
+//        orderService = new OrderServiceImpl(validationUtil, orderRepository, customerRepository);
     }
 
     @AfterEach

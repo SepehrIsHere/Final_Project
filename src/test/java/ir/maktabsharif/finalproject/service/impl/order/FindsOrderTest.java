@@ -17,8 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class FindsOrderTest {
 
@@ -46,7 +47,6 @@ public class FindsOrderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderServiceImpl(validationUtil, orderRepository, customerRepository);
     }
 
     @AfterEach
@@ -55,9 +55,9 @@ public class FindsOrderTest {
     }
 
     Order generateValidOrder() {
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         return Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(1000000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 description("test description for order").
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
@@ -65,9 +65,9 @@ public class FindsOrderTest {
     }
 
     Order generateInvalidOrder() {
-        SubTask subTask = new SubTask("test subtask", new BigDecimal(500000), "test subtask description", new Task("test task name", "test task description"));
+        SubTask subTask = new SubTask("test subtask", 500000.0, "test subtask description", new Task("test task name", "test task description"));
         return Order.builder().
-                suggestedPrice(new BigDecimal(1000000)).
+                suggestedPrice(1000000.0).
                 dateOfService(LocalDate.of(2020, Month.APRIL, 12)).
                 subTask(subTask).build();
     }

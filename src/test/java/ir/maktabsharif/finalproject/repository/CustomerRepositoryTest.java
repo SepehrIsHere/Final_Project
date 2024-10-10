@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +29,7 @@ public class CustomerRepositoryTest {
                 password("password123").
                 email("example@gmail.com").
                 role(Role.CUSTOMER).
-                credit(new BigDecimal("500.00"))
+                credit(0.0)
                 .build();
 
         customerRepository.save(testCustomer);

@@ -4,12 +4,15 @@ import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
+import ir.maktabsharif.finalproject.service.OrderService;
+import ir.maktabsharif.finalproject.service.SuggestionsService;
 import ir.maktabsharif.finalproject.service.impl.CustomerServiceImpl;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,6 +33,12 @@ class CustomerServiceImplIntegrationTest {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Mock
+    private OrderService orderService;
+
+    @Mock
+    private SuggestionsService suggestionsService;
+
     @Autowired
     private ValidationUtil validationUtil;
 
@@ -46,7 +55,7 @@ class CustomerServiceImplIntegrationTest {
                 .role(Role.CUSTOMER)
                 .credit(BigDecimal.ZERO)
                 .build();
-        customerService = new CustomerServiceImpl(validationUtil, customerRepository);
+        customerService = new CustomerServiceImpl(validationUtil, customerRepository,orderService,suggestionsService);
     }
 
     @AfterEach

@@ -61,7 +61,7 @@ public class SuggestionsServiceImplIntegrationTest {
     public void setup() {
         Task task = new Task("test first task","test first description");
         taskRepository.saveAndFlush(task);
-        SubTask subTask = new SubTask("test subtask",new BigDecimal(1000000),"test subtask desciption",task);
+        SubTask subTask = new SubTask("test subtask",1000000.0,"test subtask desciption",task);
         subTaskRepository.saveAndFlush(subTask);
 
         Customer customer = Customer.builder()
@@ -91,7 +91,7 @@ public class SuggestionsServiceImplIntegrationTest {
                 specialist(specialist).
                 customer(customer).
                 subTask(subTask).
-                suggestedPrice(new BigDecimal(10000)).
+                suggestedPrice(10000.0).
                 dateOfService(LocalDate.of(2024,10,12)).
                 status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION).
                 description("test order description").build();
@@ -100,7 +100,7 @@ public class SuggestionsServiceImplIntegrationTest {
         suggestion = Suggestions.builder()
                 .order(order)
                 .specialist(specialist)
-                .suggestedPrice(new BigDecimal("5000"))
+                .suggestedPrice(5000.0)
                 .suggestedDate(LocalDate.now())
                 .workTime(LocalTime.now())
                 .build();
@@ -130,7 +130,7 @@ public class SuggestionsServiceImplIntegrationTest {
         assertTrue(savedSuggestion.isPresent());
 
         Suggestions updatedSuggestion = savedSuggestion.get();
-        updatedSuggestion.setSuggestedPrice(new BigDecimal("6000"));
+        updatedSuggestion.setSuggestedPrice(6000.0);
         suggestionsService.update(updatedSuggestion);
 
         Optional<Suggestions> updatedSuggestionOpt = suggestionsRepository.findById(updatedSuggestion.getId());
