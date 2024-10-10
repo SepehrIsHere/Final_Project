@@ -1,10 +1,12 @@
 package ir.maktabsharif.finalproject.service;
 
 
+import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.entities.Suggestions;
 import ir.maktabsharif.finalproject.exception.SuggestionOperationException;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -24,5 +26,6 @@ public interface SuggestionsService {
     List<Suggestions> findByOrderOrderBySpecialistScoreDesc(Order order);
 
     List<Suggestions> findByOrderOrderBySuggestedPriceDesc(Order order);
+
 
 }

@@ -2,6 +2,7 @@ package ir.maktabsharif.finalproject.service;
 
 
 
+import ir.maktabsharif.finalproject.dto.SubTaskDto;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
 
@@ -19,4 +20,6 @@ public interface SubTaskService {
     SubTask findById(int id) throws SubTaskOperationException;
 
     SubTask findByName(String subTaskName) throws SubTaskOperationException;
+
+    boolean doesSubTaskExist(SubTaskDto subTaskDto);
 }

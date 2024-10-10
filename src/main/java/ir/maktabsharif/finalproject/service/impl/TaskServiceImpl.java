@@ -24,6 +24,7 @@ public class TaskServiceImpl implements TaskService {
             if (validationUtil.isValid(task)) {
                 taskRepository.save(task);
             } else {
+                //throws exception instead of printing
                 validationUtil.displayViolations(task);
             }
         } catch (Exception e) {

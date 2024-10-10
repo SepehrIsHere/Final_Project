@@ -2,12 +2,14 @@ package ir.maktabsharif.finalproject.service;
 
 
 
+import ir.maktabsharif.finalproject.dto.UserDto;
 import ir.maktabsharif.finalproject.entities.Users;
 import ir.maktabsharif.finalproject.exception.UserOperationException;
 
 import java.util.List;
 
 public interface UsersService {
+
     void add(Users users) throws UserOperationException;
 
     void update(Users users) throws UserOperationException;

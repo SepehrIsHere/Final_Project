@@ -10,10 +10,8 @@ import ir.maktabsharif.finalproject.service.SubTaskService;
 import ir.maktabsharif.finalproject.service.TaskService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

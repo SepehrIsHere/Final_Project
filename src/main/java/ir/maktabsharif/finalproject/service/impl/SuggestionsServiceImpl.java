@@ -1,8 +1,10 @@
 package ir.maktabsharif.finalproject.service.impl;
 
 
+import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.Suggestions;
+import ir.maktabsharif.finalproject.exception.SuggestionNotFound;
 import ir.maktabsharif.finalproject.exception.SuggestionOperationException;
 import ir.maktabsharif.finalproject.repository.SuggestionsRepository;
 import ir.maktabsharif.finalproject.service.SuggestionsService;
@@ -21,7 +23,8 @@ public class SuggestionsServiceImpl implements SuggestionsService {
     @Override
     public void add(Suggestions suggestion) throws SuggestionOperationException {
         try {
-            if (validationUtil.isValid(suggestion)) {
+            if (validationUtil.isValid(suggestion) &&
+                    !suggestion.getSuggestedPrice().equals(suggestion.getOrder().getSubTask().getBasePrice())) {
                 suggestionsRepository.save(suggestion);
             } else {
                 validationUtil.displayViolations(suggestion);
@@ -78,9 +81,9 @@ public class SuggestionsServiceImpl implements SuggestionsService {
 
     @Override
     public List<Suggestions> findByOrderOrderBySpecialistScoreDesc(Order order) {
-        try{
+        try {
             suggestionsRepository.findByOrderOrderBySpecialistScoreDesc(order);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
@@ -88,11 +91,12 @@ public class SuggestionsServiceImpl implements SuggestionsService {
 
     @Override
     public List<Suggestions> findByOrderOrderBySuggestedPriceDesc(Order order) {
-        try{
+        try {
             suggestionsRepository.findByOrderOrderBySuggestedPriceDesc(order);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
     }
+
 }

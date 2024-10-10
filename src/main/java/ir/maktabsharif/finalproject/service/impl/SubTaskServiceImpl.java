@@ -1,5 +1,6 @@
 package ir.maktabsharif.finalproject.service.impl;
 
+import ir.maktabsharif.finalproject.dto.SubTaskDto;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
@@ -28,7 +29,6 @@ public class SubTaskServiceImpl implements SubTaskService {
         } catch (Exception e) {
             throw new SubTaskOperationException("An error occurred while adding a SubTask", e);
         }
-
     }
 
     @Override
@@ -75,5 +75,10 @@ public class SubTaskServiceImpl implements SubTaskService {
         } catch (Exception e) {
             throw new SubTaskOperationException("An error occurred while finding a SubTask", e);
         }
+    }
+
+    @Override
+    public boolean doesSubTaskExist(SubTaskDto subTaskDto) {
+       return subTaskRepository.findByName(subTaskDto.subTaskName()) != null;
     }
 }

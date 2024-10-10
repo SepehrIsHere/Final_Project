@@ -1,22 +1,25 @@
 package ir.maktabsharif.finalproject.service.impl;
 
 
+import ir.maktabsharif.finalproject.dto.UserDto;
 import ir.maktabsharif.finalproject.entities.Users;
 import ir.maktabsharif.finalproject.exception.UserOperationException;
 import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.UsersService;
+import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UsersServiceImpl implements UsersService {
     private final ValidationUtil validationUtil;
     private final UsersRepository usersRepository;
-
+    private MapperUtil mapperUtil;
 
     @Override
     public void add(Users users) throws UserOperationException {
@@ -38,7 +41,6 @@ public class UsersServiceImpl implements UsersService {
         } catch (Exception e) {
             throw new UserOperationException("Error while updating user ", e);
         }
-
     }
 
     @Override
