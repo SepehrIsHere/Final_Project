@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
@@ -16,4 +18,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     @Query("SELECT c FROM Customer c WHERE c.id = :id")
     Customer findCustomerById(@Param("id") Integer id);
 
+    @Query("SELECT c FROM Customer c ORDER BY c.firstName ASC")
+    List<Customer> displayByFirstNameASC();
+
+    @Query("SELECT c FROM Customer c ORDER BY c.lastName ASC")
+    List<Customer> displayByLastNameASC();
+
+    @Query("SELECT c FROM Customer c ORDER BY c.credit ASC")
+    List<Customer> displayByCreditASC();
+
+    @Query("SELECT c FROM Customer c ORDER BY c.credit DESC")
+    List<Customer> displayByCreditDESC();
 }
