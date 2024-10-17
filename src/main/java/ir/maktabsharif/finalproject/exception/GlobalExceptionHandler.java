@@ -8,6 +8,51 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> resourceNotFound(UserNotFoundException ex) {
+        return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<String> invalidDate(InvalidDateException ex) {
+        return new ResponseEntity<>(" Invalid Date " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotEnoughCredit.class)
+    public ResponseEntity<String> notEnoughCredit(NotEnoughCreditException ex) {
+        return new ResponseEntity<>(" Not Enough Credit " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotEnoughCreditException.class)
+    public ResponseEntity<String> notEnoughCreditException(NotEnoughCreditException ex) {
+        return new ResponseEntity<>(" Not Enough Credit " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<String> paymentFailed(PaymentFailedException ex) {
+        return new ResponseEntity<>(" Payment Failed " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentOperationException.class)
+    public ResponseEntity<String> paymentOperationException(PaymentOperationException ex) {
+        return new ResponseEntity<>(" Payment Operation " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ReceiptOperationException.class)
+    public ResponseEntity<String> receiptOperationException(ReceiptOperationException ex) {
+        return new ResponseEntity<>(" Receipt Operation " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SpecialistIsNotAssignedException.class)
+    public ResponseEntity<String> specialistIsNotAssigned(SpecialistIsNotAssignedException ex) {
+        return new ResponseEntity<>(" Specialist Not Assigned " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
+        return new ResponseEntity<>(" User Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(CreditCardNotFoundException.class)
     public ResponseEntity<String> resourceNotFound(CreditCardNotFoundException ex) {
         return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -62,6 +107,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneralException(SpecialistOperationException ex) {
         return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(ReceiptOperationException.class)
+    public ResponseEntity<String> handleGeneralException(ReceiptOperationException ex) {
+        return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(CustomerOperationException.class)
     public ResponseEntity<String> handleGeneralException(CustomerOperationException ex) {
@@ -96,5 +145,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFieldValueException.class)
     public ResponseEntity<String> handleValidationException(InvalidFieldValueException ex) {
         return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<String> handleInvalidFormatException(InvalidDateException ex) {
+        return new ResponseEntity<>("Invalid date" + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentOperationException.class)
+    public ResponseEntity<String> handleGeneralException(PaymentOperationException ex) {
+        return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
