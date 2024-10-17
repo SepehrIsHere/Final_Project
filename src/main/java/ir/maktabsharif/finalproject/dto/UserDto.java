@@ -1,4 +1,9 @@
 package ir.maktabsharif.finalproject.dto;
 
-public record UserDto(String firstName, String lastName, String username, String password, String email) {
+public class UserDto {
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
+    private String email;
 }

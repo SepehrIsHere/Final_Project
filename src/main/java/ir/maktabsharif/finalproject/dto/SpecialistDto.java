@@ -2,11 +2,22 @@ package ir.maktabsharif.finalproject.dto;
 
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.SubTask;
-import lombok.Builder;
+import lombok.*;
 
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public record SpecialistDto(String firstname, String lastname, String username,
-                            double score, List<SubTask> specialistSubTask, List<Order> specialistOrders) {
+public class SpecialistDto {
+    private String firstname;
+    private String lastname;
+    private String username;
+    private String password;
+    private String email;
+    private double score;
+    private List<SubTask> specialistSubTask;
+    private List<Order> specialistOrders;
 }
