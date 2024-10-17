@@ -55,7 +55,31 @@ public class MapperUtil {
         return modelMapper.map(users, UserDto.class);
     }
 
+    public TaskDto convertToDto(Task task) {
+        return modelMapper.map(task, TaskDto.class);
+    }
+
+    public Task convertToEntity(TaskDto taskDto) {
+        return modelMapper.map(taskDto, Task.class);
+    }
+
     public Users convertToEntity(UserDto userDto) {
         return modelMapper.map(userDto, Users.class);
+    }
+
+    public CreditCard convertToEntity(CreditCardDto creditCardDto) {
+        return modelMapper.map(creditCardDto, CreditCard.class);
+    }
+
+    public ReceiptDto convertToDto(Receipt receipt) {
+        return modelMapper.map(receipt, ReceiptDto.class);
+    }
+
+    public Receipt convertToEntity(ReceiptDto receiptDto) {
+        return modelMapper.map(receiptDto, Receipt.class);
+    }
+
+    public CreditCardDto convertToDto(CreditCard creditCard) {
+        return modelMapper.map(creditCard, CreditCardDto.class);
     }
 }
