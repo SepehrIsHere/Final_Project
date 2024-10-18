@@ -1,28 +1,15 @@
 package ir.maktabsharif.finalproject.service;
 
 
+import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.entities.Task;
-import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
+import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface AdminService {
-    void addTask(Task task);
-
-    List<Task> displayTasks();
-
-    List<SubTask> displaySubTasks();
-
-    void addSubTask(SubTask subTask);
-
-    void addSpecialistToSubTask(Specialist specialist, SubTask subTask);
-
-    void deleteSubTask(SubTask subTask);
-
-    void deleteTask(Task task);
 
     void changeBasePriceOfSubTask(SubTask subTask, Double basePrice);
 
@@ -30,7 +17,9 @@ public interface AdminService {
 
     void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask);
 
-    void changeSpecialistStatus(Specialist specialist, SpecialistStatus specialistStatus);
+    void approveSpecialist(String specialistFirstName,String specialistLastName) throws SpecialistOperationException;
 
+    void addSubTaskToSpecialist(String specialistFirstName, String specialistLastName, String subTaskName) throws SpecialistOperationException;
 
+    void removeSubTaskFromSpecialist(String specialistFirstName, String specialistLastName, String subTaskName) throws SpecialistOperationException;
 }

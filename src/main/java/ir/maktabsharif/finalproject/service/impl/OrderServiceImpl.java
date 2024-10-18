@@ -6,20 +6,19 @@ import ir.maktabsharif.finalproject.dto.OrderDto;
 import ir.maktabsharif.finalproject.dto.SubTaskDto;
 import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.entities.Order;
+import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.enumerations.OrderStatus;
-import ir.maktabsharif.finalproject.exception.OrderNotFoundException;
-import ir.maktabsharif.finalproject.exception.OrderOperationException;
+import ir.maktabsharif.finalproject.exception.*;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.repository.OrderRepository;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
 import ir.maktabsharif.finalproject.service.OrderService;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,9 +33,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findByNameOfOrder(String nameOfOrder) {
         Order order = orderRepository.findByNameOfOrder(nameOfOrder);
-        if(order != null){
+        if (order != null) {
             return order;
-        }else{
+        } else {
             throw new OrderNotFoundException("Order Not Found");
         }
     }
@@ -81,4 +80,48 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public List<OrderDto> findByRelatedSubTask(SubTaskDto subTaskDto) throws OrderOperationException {
+        try {
+            SubTask subTask = subTaskRepository.findByName(subTaskDto.getSubTaskName());
+            if (subTask != null) {
+                return orderRepository.findByRelatedSubTask(subTask)
+                        .stream()
+                        .map(order -> mapperUtil.convertToDto(order))
+                        .toList();
+            } else {
+                throw new SubTaskNotFoundException("SubTask Not Found");
+            }
+        } catch (Exception e) {
+            throw new OrderOperationException("An error occured while finding related orders ", e);
+        }
+    }
+
+    @Override
+    public List<Order> findWaitingForSelectionOrders() throws OrderOperationException {
+        try{
+            return orderRepository.findOrderByOrderStatus(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION);
+        }catch (Exception e){
+            throw new OrderOperationException("An error occured while finding related orders ",e);
+        }
+    }
+
+    @Override
+    public List<OrderDto> findCustomerOrders(CustomerDto customerDto) {
+        Customer customer = customerRepository.findCustomerByFirstNameAndLastName(customerDto.getFirstname(), customerDto.getLastname());
+        if (customer != null) {
+            List<Order> customerOrders = orderRepository.findByCustomer(customer);
+            if (customerOrders != null && !customerOrders.isEmpty()) {
+                List<OrderDto> orderDtos = new ArrayList<>();
+                for (Order order : customerOrders) {
+                    orderDtos.add(mapperUtil.convertToDto(order));
+                }
+                return orderDtos;
+            } else {
+                throw new CustomerOrderListEmpty("Customer does not have any order ! ");
+            }
+        } else {
+            throw new CustomerNotFoundException("Customer Not Found !");
+        }
+    }
 }

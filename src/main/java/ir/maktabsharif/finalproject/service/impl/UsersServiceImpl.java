@@ -70,13 +70,5 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
-    @Override
-    public Users login(String username, String password) throws UserOperationException {
-        try {
-            return usersRepository.loginUsers(username, password);
-        } catch (Exception e) {
-            throw new UserOperationException("An error occured while login user ", e);
-        }
-    }
 
 }

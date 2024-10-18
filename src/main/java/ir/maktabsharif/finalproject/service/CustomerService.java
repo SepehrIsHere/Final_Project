@@ -9,17 +9,19 @@ import java.util.List;
 
 public interface CustomerService {
 
-    void add(Customer customer) throws CustomerOperationException;
+    Customer add(Customer customer) throws CustomerOperationException;
 
     void update(Customer customer) throws CustomerOperationException;
 
-    void delete(CustomerDto customerDto) throws CustomerOperationException;
+    void delete(Customer customer) throws CustomerOperationException;
 
     List<Customer> findAll() throws CustomerOperationException;
 
     Customer findById(int id) throws CustomerOperationException;
 
     Customer findByFirstNameAndLastName(String firstName,String lastName) throws CustomerOperationException;
+
+    CustomerDto createCustomer(CustomerDto customerDto) throws CustomerOperationException;
 
     boolean doesCustomerExist(CustomerDto customerDto);
 }

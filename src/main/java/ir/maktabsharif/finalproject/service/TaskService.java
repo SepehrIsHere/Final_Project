@@ -21,4 +21,7 @@ public interface TaskService {
 
     Task findByName(String name) throws TaskOperationException;
 
+    void changeTaskName(String taskName, String newName) throws TaskOperationException;
+
+    void changeTaskDescription(String taskName, String newDescription) throws TaskOperationException;
 }

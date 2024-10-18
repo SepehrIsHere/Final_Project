@@ -1,10 +1,12 @@
 package ir.maktabsharif.finalproject.service.impl;
 
+import ir.maktabsharif.finalproject.dto.OrderDto;
 import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
 import ir.maktabsharif.finalproject.exception.IllegalImageException;
 import ir.maktabsharif.finalproject.exception.SpecialistNotFoundException;
+import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 import ir.maktabsharif.finalproject.repository.SpecialistRepository;
 import ir.maktabsharif.finalproject.service.SpecialistEditService;
 import ir.maktabsharif.finalproject.util.MapperUtil;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void updateFirstName(SpecialistDto specialistDto, String newFirstName) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setFirstName(newFirstName);
             specialistRepository.save(specialist);
@@ -34,7 +37,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void updateLastName(SpecialistDto specialistDto, String newLastName) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setLastName(newLastName);
             specialistRepository.save(specialist);
@@ -45,7 +48,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void updateUsername(SpecialistDto specialistDto, String newUsername) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setUsername(newUsername);
             specialistRepository.save(specialist);
@@ -56,7 +59,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void updatePassword(SpecialistDto specialistDto, String newPassword) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setPassword(newPassword);
             specialistRepository.save(specialist);
@@ -67,7 +70,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void changeSpecialistStatus(SpecialistDto specialistDto, SpecialistStatus newStatus) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setSpecialistStatus(newStatus);
             specialistRepository.save(specialist);
@@ -78,7 +81,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void addPersonalImage(SpecialistDto specialistDto, File filepath) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             if (personalImageUtil.isImageValid(filepath)) {
                 specialist.setPersonalImage(personalImageUtil.writeImage(filepath));
@@ -93,7 +96,7 @@ public class SpecialistEditServiceImpl implements SpecialistEditService {
 
     @Override
     public void removePersonalImage(SpecialistDto specialistDto) {
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
         if (specialist != null) {
             specialist.setPersonalImage(null);
             specialistRepository.save(specialist);

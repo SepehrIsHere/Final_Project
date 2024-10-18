@@ -1,6 +1,9 @@
 package ir.maktabsharif.finalproject.service;
 
 
+import ir.maktabsharif.finalproject.dto.OrderDto;
+import ir.maktabsharif.finalproject.dto.SpecialistDto;
+import ir.maktabsharif.finalproject.dto.SuggestionDto;
 import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.Specialist;
@@ -23,9 +26,12 @@ public interface SuggestionsService {
 
     List<Suggestions> findByOrder(Order order) throws SuggestionOperationException;
 
-    List<Suggestions> findByOrderOrderBySpecialistScoreDesc(Order order);
+    List<Suggestions> findByOrderOrderBySpecialistScoreDesc(Order order) throws SuggestionOperationException;
 
-    List<Suggestions> findByOrderOrderBySuggestedPriceDesc(Order order);
+    List<Suggestions> findByOrderOrderBySuggestedPriceDesc(Order order) throws SuggestionOperationException;
 
+    Suggestions findSuggestionsByNameOfOrderAndSpecialist(String nameOfOrder, String specialistFirstName, String specialistLastName) throws SuggestionOperationException;
+
+    Suggestions findSuggestionByCustomerAndNameOfOrder( Customer customer, String nameOfOrder) throws SuggestionOperationException;
 
 }

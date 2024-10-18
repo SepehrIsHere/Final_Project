@@ -5,15 +5,14 @@ import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.dto.SuggestionDto;
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.Specialist;
+import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.entities.Suggestions;
 import ir.maktabsharif.finalproject.enumerations.OrderStatus;
 import ir.maktabsharif.finalproject.exception.*;
 import ir.maktabsharif.finalproject.repository.OrderRepository;
 import ir.maktabsharif.finalproject.repository.SpecialistRepository;
 import ir.maktabsharif.finalproject.repository.SuggestionsRepository;
-import ir.maktabsharif.finalproject.service.OrderService;
-import ir.maktabsharif.finalproject.service.SpecialistSuggestionService;
-import ir.maktabsharif.finalproject.service.SuggestionsService;
+import ir.maktabsharif.finalproject.service.*;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,30 +25,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionService {
     private final OrderRepository orderRepository;
-    private final OrderService orderService;
     private final SpecialistRepository specialistRepository;
+    private final SubTaskService subTaskService;
+    private final SpecialistService specialistService;
     private final SuggestionsService suggestionsService;
     private final MapperUtil mapperUtil;
-    private final SuggestionsRepository suggestionsRepository;
 
     @Override
-    public SuggestionDto createSuggestionForOrder(Double suggestedPrice, LocalDate suggestedDate, LocalTime suggestedTime, OrderDto orderDto, SpecialistDto specialistDto) throws SuggestionOperationException {
-        Order order = orderRepository.findByNameOfOrder(orderDto.nameOfOrder());
-        Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
+    public SuggestionDto createSuggestionForOrder(SuggestionDto suggestionDto) throws SuggestionOperationException, InvalidFieldValueException, SpecialistOperationException, SubTaskOperationException {
+        Order order = orderRepository.findByNameOfOrder(suggestionDto.getNameOfOrder());
+        Specialist specialist = specialistRepository.findByFirstNameAndLastName(suggestionDto.getSpecialistFirstName(), suggestionDto.getSpecialistLastName());
         if (order != null) {
             if (specialist != null) {
                 if (order.getStatus().equals(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION) || order.getStatus().equals(OrderStatus.WAITING_FOR_SPECIALIST_PROPOSALS)) {
-                    Suggestions suggestions = Suggestions.builder()
-                            .specialist(order.getSpecialist())
-                            .order(order).suggestedPrice(suggestedPrice)
-                            .suggestedDate(suggestedDate).workTime(suggestedTime)
-                            .build();
-                    List<Suggestions> orderSuggestions = order.getSuggestions();
-                    orderSuggestions.add(suggestions);
-                    order.setSuggestions(orderSuggestions);
-                    orderRepository.save(order);
-                    suggestionsService.add(suggestions);
-                    return mapperUtil.convertToDto(suggestions);
+                    if (suggestionDto.getSuggestedPrice() >= order.getSubTask().getBasePrice()) {
+                        if(isSpecialistAssignedToSubTask(order.getSubTask().getName(),suggestionDto.getSpecialistFirstName(),suggestionDto.getSpecialistLastName())) {
+                            Suggestions suggestions = Suggestions.builder()
+                                    .specialist(specialist)
+                                    .order(order)
+                                    .suggestedPrice(suggestionDto.getSuggestedPrice())
+                                    .suggestedDate(suggestionDto.getSuggestedDate())
+                                    .workTime(suggestionDto.getSuggestedTime())
+                                    .build();
+                            suggestionsService.add(suggestions);
+                            List<Suggestions> orderSuggestions = order.getSuggestions();
+                            orderSuggestions.add(suggestions);
+                            order.setSuggestions(orderSuggestions);
+                            orderRepository.save(order);
+                            return mapperUtil.convertToDto(suggestions);
+                        }else{
+                            throw new SpecialistIsNotAssignedException("Specialist is not assigned to the following subtask");
+                        }
+                    } else {
+                        throw new InvalidFieldValueException("Suggested price is invalid");
+                    }
                 } else {
                     throw new InvalidOrderStatus("Order Status is invalid ! ");
                 }
@@ -61,20 +70,15 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
         }
     }
 
-    @Override
-    public void removeSuggestionForOrder(SuggestionDto suggestionDto) throws SuggestionOperationException {
-        Suggestions suggestions = suggestionsService.findById(suggestionDto.id());
-        Order order = orderRepository.findByNameOfOrder(suggestionDto.orderDto().nameOfOrder());
-        if (suggestions != null && order != null) {
-            suggestionsRepository.delete(suggestions);
-            List<Suggestions> orderSuggestions = order.getSuggestions();
-            orderSuggestions.remove(suggestions);
-            order.setSuggestions(orderSuggestions);
-            orderRepository.save(order);
-        } else {
-            throw new SuggestionNotFound("Suggestion Not Found ");
+
+    boolean isSpecialistAssignedToSubTask(String subTaskName, String specialistFirstName, String specialistLastName) throws SpecialistOperationException, SubTaskOperationException {
+        Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
+        SubTask subTask = subTaskService.findByName(subTaskName);
+        List<SubTask> specialistSubTasks = specialist.getSubTasks();
+        if (specialistSubTasks != null) {
+            return specialistSubTasks.contains(subTask);
+        }else{
+            return false;
         }
     }
-
-
 }

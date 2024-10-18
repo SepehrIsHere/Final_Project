@@ -2,6 +2,7 @@ package ir.maktabsharif.finalproject.service.impl;
 
 
 import ir.maktabsharif.finalproject.dto.SpecialistDto;
+import ir.maktabsharif.finalproject.dto.SubTaskDto;
 import ir.maktabsharif.finalproject.entities.*;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
@@ -14,6 +15,7 @@ import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,24 +23,22 @@ import java.util.List;
 public class SpecialistServiceImpl implements SpecialistService {
     private final ValidationUtil validationUtil;
     private final SpecialistRepository specialistRepository;
-    private final SubTaskService subTaskService;
-    private final UsersService usersService;
     private final MapperUtil mapperUtil;
 
     @Override
-    public SpecialistDto signUp(String firstName, String lastName, String email, String username, String password) throws SpecialistOperationException {
-            Specialist specialist = Specialist.builder()
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .email(email)
-                    .username(username)
-                    .password(password)
-                    .role(Role.SPECIALIST)
-                    .specialistStatus(SpecialistStatus.PENDING_APPROVAL)
-                    .score(0.0)
-                    .build();
-            add(specialist);
-            return mapperUtil.convertToDto(specialist);
+    public SpecialistDto signUp(SpecialistDto specialistDto) throws SpecialistOperationException {
+        Specialist specialist = Specialist.builder()
+                .firstName(specialistDto.getFirstname())
+                .lastName(specialistDto.getLastname())
+                .email(specialistDto.getEmail())
+                .username(specialistDto.getUsername())
+                .password(specialistDto.getPassword())
+                .role(Role.SPECIALIST)
+                .specialistStatus(SpecialistStatus.PENDING_APPROVAL)
+                .score(0.0)
+                .build();
+        add(specialist);
+        return mapperUtil.convertToDto(specialist);
     }
 
     @Override
@@ -65,14 +65,9 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public void delete(SpecialistDto specialistDto) throws SpecialistOperationException {
+    public void delete(Specialist specialist) throws SpecialistOperationException {
         try {
-            if (doesSpecialistExist(specialistDto)) {
-                Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
-                specialistRepository.delete(specialist);
-            } else {
-                throw new SpecialistNotFoundException("Specialist not found");
-            }
+            specialistRepository.delete(specialist);
         } catch (Exception e) {
             throw new SpecialistOperationException("An error occured while deleting specialist", e);
         }
@@ -109,8 +104,8 @@ public class SpecialistServiceImpl implements SpecialistService {
     public boolean checkSpecialistImage(SpecialistDto specialistDto) throws SpecialistOperationException {
         try {
             Specialist specialist =
-                    specialistRepository.findByFirstNameAndLastName(specialistDto.firstname(), specialistDto.lastname());
-            if (doesSpecialistExist(specialistDto)) {
+                    specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
+            if (findSpecialist(specialistDto) != null) {
                 return specialist.getPersonalImage() != null;
             } else {
                 throw new SpecialistNotFoundException("Specialist not found");
@@ -120,12 +115,27 @@ public class SpecialistServiceImpl implements SpecialistService {
         }
     }
 
-
     @Override
-    public boolean doesSpecialistExist(SpecialistDto specialistDto) throws SpecialistOperationException {
-        Specialist specialist =
-                findByFirstNameAndLastName(mapperUtil.convertToEntity(specialistDto).getFirstName(), mapperUtil.convertToEntity(specialistDto).getLastName());
-        return specialist.getId() != null && specialist.getFirstName() != null && specialist.getLastName() != null;
+    public List<SubTaskDto> specialistSubTasks(SpecialistDto specialistDto) {
+        Specialist specialist = findSpecialist(specialistDto);
+        if (specialist != null) {
+            List<SubTask> specialistSubTasks = specialist.getSubTasks();
+            if (specialistSubTasks != null) {
+                List<SubTaskDto> subTaskDtos = new ArrayList<>();
+                for (SubTask subTask : specialistSubTasks) {
+                    subTaskDtos.add(mapperUtil.convertToDto(subTask));
+                }
+                return subTaskDtos;
+            } else {
+                throw new SpecialistNotFoundException("Specialist list is null or empty");
+            }
+        } else {
+            throw new SpecialistNotFoundException("Specialist Not Found ! ");
+        }
+    }
+
+    private Specialist findSpecialist(SpecialistDto specialistDto) {
+        return specialistRepository.findByFirstNameAndLastName(specialistDto.getFirstname(), specialistDto.getLastname());
     }
 
 }

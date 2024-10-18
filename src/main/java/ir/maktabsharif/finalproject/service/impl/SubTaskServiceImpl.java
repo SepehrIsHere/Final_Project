@@ -1,10 +1,14 @@
 package ir.maktabsharif.finalproject.service.impl;
 
 import ir.maktabsharif.finalproject.dto.SubTaskDto;
+import ir.maktabsharif.finalproject.dto.TaskDto;
 import ir.maktabsharif.finalproject.entities.SubTask;
+import ir.maktabsharif.finalproject.exception.SubTaskNotFoundException;
 import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
 import ir.maktabsharif.finalproject.service.SubTaskService;
+import ir.maktabsharif.finalproject.service.TaskService;
+import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,8 @@ import java.util.List;
 public class SubTaskServiceImpl implements SubTaskService {
     private final ValidationUtil validationUtil;
     private final SubTaskRepository subTaskRepository;
+    private final TaskService taskService;
+    private final MapperUtil mapperUtil;
 
     @Override
     public void add(SubTask subTask) throws SubTaskOperationException {
@@ -78,7 +84,46 @@ public class SubTaskServiceImpl implements SubTaskService {
     }
 
     @Override
+    public List<SubTask> findSubTaskByTask(String taskName) throws SubTaskOperationException {
+        try {
+            return subTaskRepository.findSubTaskByTask(taskService.findByName(taskName));
+        } catch (Exception e) {
+            throw new SubTaskOperationException("An error occurred while finding a SubTask", e);
+        }
+    }
+
+    @Override
+    public void changeBasePrice(String subTaskName, Double newBasePrice) throws SubTaskOperationException {
+        try {
+            SubTask subTask = subTaskRepository.findByName(subTaskName);
+            if (subTask != null) {
+                subTask.setBasePrice(newBasePrice);
+                subTaskRepository.save(subTask);
+            } else {
+                throw new SubTaskNotFoundException("Subtask not found ! ");
+            }
+        } catch (Exception e) {
+            throw new SubTaskOperationException("An error occured while updating base price", e);
+        }
+    }
+
+    @Override
+    public void changeDescription(String subTaskName, String description) throws SubTaskOperationException {
+        try {
+            SubTask subTask = subTaskRepository.findByName(subTaskName);
+            if (subTask != null) {
+                subTask.setDescription(description);
+                subTaskRepository.save(subTask);
+            } else {
+                throw new SubTaskNotFoundException("Subtask not found ! ");
+            }
+        } catch (Exception e) {
+            throw new SubTaskOperationException("An error occured while updating description ", e);
+        }
+    }
+
+    @Override
     public boolean doesSubTaskExist(SubTaskDto subTaskDto) {
-       return subTaskRepository.findByName(subTaskDto.subTaskName()) != null;
+        return subTaskRepository.findByName(subTaskDto.getSubTaskName()) != null;
     }
 }

@@ -1,7 +1,6 @@
 package ir.maktabsharif.finalproject.service;
 
 
-
 import ir.maktabsharif.finalproject.dto.UserDto;
 import ir.maktabsharif.finalproject.entities.Users;
 import ir.maktabsharif.finalproject.exception.UserOperationException;
@@ -20,5 +19,4 @@ public interface UsersService {
 
     Users findById(int id) throws UserOperationException;
 
-    Users login(String username, String password) throws UserOperationException;
 }
