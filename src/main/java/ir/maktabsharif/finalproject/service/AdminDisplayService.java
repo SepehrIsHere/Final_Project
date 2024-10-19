@@ -11,6 +11,13 @@ import ir.maktabsharif.finalproject.exception.UserOperationException;
 import java.util.List;
 
 public interface AdminDisplayService {
+
+    List<Users> searchUsers(String firstName, String lastName, String email, String username, String password, Role role, String orderBy, Boolean ascending);
+
+    List<Customer> searchCustomers(String firstName, String lastName, String email, String username, double credit, String orderBy, boolean ascending);
+
+    List<Specialist> searchSpecialists(String firstName, String lastName, String email, String username, double score, String subTaskName, String orderBy, boolean ascending);
+
     List<Customer> displayByCreditASC() throws CustomerOperationException;
 
     List<Customer> displayByCreditDESC() throws CustomerOperationException;

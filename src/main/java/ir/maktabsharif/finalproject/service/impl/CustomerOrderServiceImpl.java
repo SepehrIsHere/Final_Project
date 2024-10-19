@@ -25,6 +25,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private final ReceiptService receiptService;
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
     private final SuggestionsService suggestionsService;
     private final OrderService orderService;
     private final SpecialistService specialistService;
@@ -46,7 +47,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                         .status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION)
                         .subTask(subTask)
                         .build();
-                orderService.add(order);
+                orderRepository.save(order);
                 return orderDto;
             } else {
                 throw new SubTaskNotFoundException("SubTask Not Found ! ");

@@ -5,13 +5,18 @@ import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.entities.Users;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
+import ir.maktabsharif.finalproject.exception.NotFoundByFilterException;
 import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 import ir.maktabsharif.finalproject.exception.UserOperationException;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.repository.SpecialistRepository;
 import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.AdminDisplayService;
+import ir.maktabsharif.finalproject.specification.CustomerSpecification;
+import ir.maktabsharif.finalproject.specification.SpecialistSpecification;
+import ir.maktabsharif.finalproject.specification.UsersSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +27,36 @@ public class AdminDisplayServiceImpl implements AdminDisplayService {
     private final UsersRepository usersRepository;
     private final CustomerRepository customerRepository;
     private final SpecialistRepository specialistRepository;
+
+    @Override
+    public List<Users> searchUsers(String firstName, String lastName, String email, String username, String password, Role role, String orderBy, Boolean ascending) {
+        try {
+            Specification<Users> specification = new UsersSpecification(firstName, lastName, username, password, email, role, orderBy, ascending);
+            return usersRepository.findAll(specification);
+        } catch (Exception e) {
+            throw new NotFoundByFilterException("User not found using custom filters ");
+        }
+    }
+
+    @Override
+    public List<Customer> searchCustomers(String firstName, String lastName, String email, String username, double credit, String orderBy, boolean ascending) {
+        try {
+            Specification<Customer> specification = new CustomerSpecification(firstName, lastName, email, username, credit, orderBy, ascending);
+            return customerRepository.findAll(specification);
+        } catch (Exception e) {
+            throw new NotFoundByFilterException("Customer not found using custom filters ");
+        }
+    }
+
+    @Override
+    public List<Specialist> searchSpecialists(String firstName, String lastName, String email, String username, double score, String subTaskName, String orderBy, boolean ascending) {
+        try {
+            Specification<Specialist> specification = new SpecialistSpecification(firstName, lastName, email, username, score, subTaskName, orderBy, ascending);
+            return specialistRepository.findAll(specification);
+        } catch (Exception e) {
+            throw new NotFoundByFilterException("Special ist not found using custom filters ");
+        }
+    }
 
     @Override
     public List<Customer> displayByCreditASC() throws CustomerOperationException {

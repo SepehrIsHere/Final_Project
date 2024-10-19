@@ -5,17 +5,22 @@ import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.entities.*;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
+import ir.maktabsharif.finalproject.exception.NotFoundByFilterException;
 import ir.maktabsharif.finalproject.exception.SpecialistNotFoundException;
 import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 import ir.maktabsharif.finalproject.exception.SubTaskNotFoundException;
+import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.repository.SpecialistRepository;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
+import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.AdminService;
 import ir.maktabsharif.finalproject.service.SpecialistService;
 import ir.maktabsharif.finalproject.service.SubTaskService;
 import ir.maktabsharif.finalproject.service.TaskService;
+import ir.maktabsharif.finalproject.specification.UsersSpecification;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +35,8 @@ public class AdminServiceImpl implements AdminService {
     private final SubTaskRepository subTaskRepository;
     private final SubTaskService subTaskService;
     private final ValidationUtil validationUtil;
+
+
 
     @Override
     public void addSubTaskToSpecialist(String specialistFirstName, String specialistLastName,String subTaskName) throws SpecialistOperationException {

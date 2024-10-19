@@ -1,8 +1,11 @@
 package ir.maktabsharif.finalproject.service;
 
 
+import ir.maktabsharif.finalproject.dto.CommentDto;
 import ir.maktabsharif.finalproject.entities.Comment;
 import ir.maktabsharif.finalproject.entities.Customer;
+import ir.maktabsharif.finalproject.entities.Specialist;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -17,5 +20,7 @@ public interface CommentService {
 
     Comment findById(int id);
 
-    List<Comment> findByCustomer(Customer customer);
+    List<Comment> findBySpecialist(String specialistFirstName,String specialistLastName);
+
+    Comment addAComment(CommentDto commentDto);
 }

@@ -43,11 +43,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void add(Order order) throws OrderOperationException {
         try {
-            if (validationUtil.isValid(order)) {
+//            if (validationUtil.isValid(order)) {
                 orderRepository.save(order);
-            } else {
-                validationUtil.displayViolations(order);
-            }
+//            } else {
+//                validationUtil.displayViolations(order);
+//            }
         } catch (Exception e) {
             throw new OrderOperationException("An error occurred while adding an order ", e);
         }

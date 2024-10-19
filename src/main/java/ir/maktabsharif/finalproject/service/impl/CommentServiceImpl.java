@@ -1,10 +1,15 @@
 package ir.maktabsharif.finalproject.service.impl;
 
 
+import ir.maktabsharif.finalproject.dto.CommentDto;
 import ir.maktabsharif.finalproject.entities.Comment;
 import ir.maktabsharif.finalproject.entities.Customer;
+import ir.maktabsharif.finalproject.entities.Specialist;
+import ir.maktabsharif.finalproject.exception.CommentOperationException;
 import ir.maktabsharif.finalproject.repository.CommentRepository;
 import ir.maktabsharif.finalproject.service.CommentService;
+import ir.maktabsharif.finalproject.service.CustomerService;
+import ir.maktabsharif.finalproject.service.SpecialistService;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+    private final SpecialistService specialistService;
+    private final CustomerService customerService;
     private final ValidationUtil validationUtil;
 
     @Override
@@ -69,12 +76,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> findByCustomer(Customer customer) {
+    public List<Comment> findBySpecialist(String specialistFirstName, String specialistLastName) {
         try {
-            return commentRepository.findByCustomer(customer);
+            Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
+            return commentRepository.findBySpecialist(specialist);
         } catch (Exception e) {
-            System.out.println("An error occured while finding customer's comments " + e.getMessage());
+            throw new CommentOperationException("An error occured while trying to find specialist comments");
         }
-        return null;
+    }
+
+    @Override
+    public Comment addAComment(CommentDto commentDto) {
+        try {
+            Specialist specialist = specialistService.findByFirstNameAndLastName(commentDto.getSpecialistFirstName(), commentDto.getSpecialistLastName());
+            Customer customer = customerService.findByFirstNameAndLastName(commentDto.getCustomerFirstName(), commentDto.getCustomerLastName());
+            Comment comment = Comment.builder()
+                    .specialist(specialist)
+                    .customer(customer)
+                    .ratingPoint(commentDto.getRating())
+                    .text(commentDto.getDescription())
+                    .build();
+            add(comment);
+            return comment;
+        } catch (Exception e) {
+            throw new CommentOperationException("An error occured while trying to add comment for specialist");
+        }
     }
 }

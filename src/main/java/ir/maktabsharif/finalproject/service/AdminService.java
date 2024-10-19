@@ -5,6 +5,8 @@ import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.entities.Specialist;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.entities.Task;
+import ir.maktabsharif.finalproject.entities.Users;
+import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 
 import java.util.List;
