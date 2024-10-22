@@ -82,4 +82,12 @@ public class MapperUtil {
     public CreditCardDto convertToDto(CreditCard creditCard) {
         return modelMapper.map(creditCard, CreditCardDto.class);
     }
+
+    public Comment convertToEntity(CommentDto commentDto){
+        return modelMapper.map(commentDto, Comment.class);
+    }
+
+    public CommentDto convertToDto(Comment comment){
+        return modelMapper.map(comment,CommentDto.class);
+    }
 }

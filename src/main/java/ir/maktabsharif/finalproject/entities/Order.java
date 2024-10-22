@@ -39,10 +39,9 @@ public class Order extends BaseEntity {
     private String description;
 
     @Enumerated
-    @NotNull(message = "order status cant be null")
     private OrderStatus status;
 
-    @OneToOne
+    @ManyToOne
     private SubTask subTask;
 
     @ManyToOne

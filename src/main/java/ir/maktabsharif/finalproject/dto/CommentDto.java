@@ -8,6 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CommentDto {
-    private CustomerDto customer;
-    private SpecialistDto specialist;
+    private String customerFirstName;
+    private String customerLastName;
+    private String specialistFirstName;
+    private String specialistLastName;
+    private String description;
+    private double rating;
 }

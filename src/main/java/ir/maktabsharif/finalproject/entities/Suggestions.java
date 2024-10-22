@@ -30,6 +30,9 @@ public class Suggestions extends BaseEntity {
     private Specialist specialist;
 
     @ManyToOne
+    private Customer customer;
+
+    @ManyToOne
     private Order order;
 
     @Column

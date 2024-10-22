@@ -26,7 +26,7 @@ public class SubTask extends BaseEntity {
     @Size(min = 1, max = 70, message = "name cant be smaller than 1 and bigger than 70")
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @NotNull(message = "base price cant be null")
     @Min(value = 0, message = "base price cannot be smaller than 0")
     private Double basePrice;

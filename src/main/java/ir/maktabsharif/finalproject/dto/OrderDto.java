@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDto {
+public class   OrderDto {
     private String nameOfOrder;
     private Double suggestedPrice;
     private LocalDate dateOfService;

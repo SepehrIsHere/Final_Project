@@ -27,7 +27,7 @@ public class Customer extends Users {
     @OneToMany
     private List<Comment> comments;
 
-    @OneToOne
-    private Users user;
+//    @OneToOne
+//    private Users user;
 
 }

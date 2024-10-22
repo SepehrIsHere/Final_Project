@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "tasks")
-public class    Task extends BaseEntity {
+public class Task extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     @NotBlank(message = "task's name cant be blank !")
