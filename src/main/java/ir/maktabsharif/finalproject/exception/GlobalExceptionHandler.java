@@ -13,11 +13,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InvalidDateException.class)
-    public ResponseEntity<String> invalidDate(InvalidDateException ex) {
-        return new ResponseEntity<>(" Invalid Date " + ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(NotEnoughCredit.class)
     public ResponseEntity<String> notEnoughCredit(NotEnoughCreditException ex) {
         return new ResponseEntity<>(" Not Enough Credit " + ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -46,11 +41,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SpecialistIsNotAssignedException.class)
     public ResponseEntity<String> specialistIsNotAssigned(SpecialistIsNotAssignedException ex) {
         return new ResponseEntity<>(" Specialist Not Assigned " + ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
-        return new ResponseEntity<>(" User Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CreditCardNotFoundException.class)
@@ -107,10 +97,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneralException(SpecialistOperationException ex) {
         return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler(ReceiptOperationException.class)
-    public ResponseEntity<String> handleGeneralException(ReceiptOperationException ex) {
-        return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(CustomerOperationException.class)
     public ResponseEntity<String> handleGeneralException(CustomerOperationException ex) {
@@ -152,8 +138,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Invalid date" + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PaymentOperationException.class)
-    public ResponseEntity<String> handleGeneralException(PaymentOperationException ex) {
-        return new ResponseEntity<>(" Resource Not Found " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(NotFoundByFilterException.class)
+    public ResponseEntity<String> handleNotFoundFilter(NotFoundByFilterException ex) {
+        return new ResponseEntity<>("Not Found by filter " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ImageOperationException.class)
+    public ResponseEntity<String> handleGeneralException(ImageOperationException ex) {
+        return new ResponseEntity<>("Image Operation Exception" + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidSpecialistStatus.class)
+    public ResponseEntity<String> handleGeneralException(InvalidSpecialistStatus ex){
+        return new ResponseEntity<>("Specialist status is not valid" + ex.getMessage(),HttpStatus.FORBIDDEN);
     }
 }
