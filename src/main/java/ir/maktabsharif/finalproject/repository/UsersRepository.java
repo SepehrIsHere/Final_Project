@@ -10,17 +10,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Integer> , JpaSpecificationExecutor<Users> {
     @Query("SELECT u FROM Users u WHERE u.id = :id")
     Users findUserById(@Param("id") int id);
 
+    @Query("SELECT u FROM Users u WHERE u.username = :username")
+    Optional<Users> findUserByUsername(@Param("username") String username);
+
     @Query("SELECT u FROM Users u WHERE u.firstName = :firstName AND u.lastName = :lastName")
     Users findByFirstNameAndLastName(@Param("firstName") String firstName, @Param("lastName") String lastName);
-
-    @Query("SELECT u FROM Users u WHERE u.username = :username AND u.password = :password")
-    Users loginUsers(String username, String password);
 
     @Query("SELECT u FROM Users u WHERE u.role = :role")
     List<Users> findByRole(@Param("role") Role role);

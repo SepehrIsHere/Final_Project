@@ -5,7 +5,9 @@ import ir.maktabsharif.finalproject.entities.Customer;
 import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.enumerations.OrderStatus;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpecificationExecutor<Order> {
 
     @Query("SELECT o FROM Order o WHERE o.customer = :customer")
     List<Order> findByCustomer(@Param("customer") Customer customer);
