@@ -8,6 +8,7 @@ import ir.maktabsharif.finalproject.service.OrderService;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,28 +21,26 @@ public class OrderController {
     private final CustomerOrderService customerOrderService;
     private final MapperUtil mapperUtil;
 
-    @GetMapping("GET/orders")
+    @GetMapping("get-all/orders")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     List<OrderDto> getOrders() throws OrderOperationException {
         return orderService.findAll().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @PostMapping("POST/order")
-    OrderDto createOrder(@RequestBody OrderDto orderDto) throws OrderOperationException {
-      return customerOrderService.placeAnOrder(orderDto);
-    }
-
-    @DeleteMapping("DELETE/order/{nameOfOrder}")
+    @DeleteMapping("admin/delete-order/{nameOfOrder}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     ResponseEntity<Void> deleteOrder(@PathVariable String nameOfOrder) throws OrderOperationException {
         orderService.delete(orderService.findByNameOfOrder(nameOfOrder));
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("GET/orders/{nameOfOrder}")
+    @GetMapping("admin/find-name/{nameOfOrder}")
     OrderDto findByNameOfOrder(@PathVariable String nameOfOrder) throws OrderOperationException {
         return mapperUtil.convertToDto(orderService.findByNameOfOrder(nameOfOrder));
     }
 
-    @GetMapping("GET/orders/{customerFirstName}/{customerLastName}")
+    @GetMapping("customer-related/orders/{customerFirstName}/{customerLastName}")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR','CUSTOMER')")
     List<OrderDto> findCustomersOrders(@PathVariable String customerFirstName, @PathVariable String customerLastName) throws OrderOperationException, CustomerOperationException {
         return customerOrderService.findCustomersOrders(customerFirstName, customerLastName);
     }

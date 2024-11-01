@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,8 @@ public class PersonalImageController {
     private final PersonalImageUtil personalImageUtil;
     private final SpecialistService specialistService;
 
-    @PostMapping("/upload/{specialistFirstName}/{specialistLastName}")
+    @PostMapping("specialist/upload/{specialistFirstName}/{specialistLastName}")
+    @PreAuthorize("hasRole('SPECIALIST')")
     public ResponseEntity<String> uploadPersonalImage(@PathVariable String specialistFirstName
             , @PathVariable String specialistLastName
             , @RequestParam("imageFile") MultipartFile file) {
@@ -41,7 +43,8 @@ public class PersonalImageController {
         }
     }
 
-    @GetMapping("view/{specialistFirstName}/{specialistLastName}")
+    @GetMapping("specialist/view/{specialistFirstName}/{specialistLastName}")
+    @PreAuthorize("hasRole('SPECIALIST')")
     ResponseEntity<byte[]> getPersonalImage(@PathVariable String specialistFirstName, @PathVariable String specialistLastName) {
         try {
             Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName, specialistLastName);

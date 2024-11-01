@@ -1,7 +1,6 @@
 package ir.maktabsharif.finalproject.controller;
 
 import ir.maktabsharif.finalproject.dto.SubTaskDto;
-import ir.maktabsharif.finalproject.dto.TaskDto;
 import ir.maktabsharif.finalproject.entities.SubTask;
 import ir.maktabsharif.finalproject.entities.Task;
 import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
@@ -10,8 +9,8 @@ import ir.maktabsharif.finalproject.service.SubTaskService;
 import ir.maktabsharif.finalproject.service.TaskService;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,12 +22,13 @@ public class SubTaskController {
     private final TaskService taskService;
     private final MapperUtil mapperUtil;
 
-    @GetMapping("GET/subtasks")
+    @GetMapping("admin/all/subtasks")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     List<SubTaskDto> getSubTasks() throws SubTaskOperationException {
         return subTaskService.findAll().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @PostMapping("POST/subtasks")
+    @PostMapping("admin/add/subtasks")
     ResponseEntity<Void> createSubTask(@RequestBody SubTaskDto subTaskDto) throws SubTaskOperationException, TaskOperationException {
        Task task = taskService.findByName(subTaskDto.getTaskName());
         SubTask subTask = mapperUtil.convertToEntity(subTaskDto);
@@ -37,36 +37,39 @@ public class SubTaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("GET/subtasks/related/{taskName}")
-    List<SubTask> getRelatedSubTasks(@PathVariable String taskName) throws SubTaskOperationException, TaskOperationException {
+    @GetMapping("admin/subtasks/related/{taskName}")
+    List<SubTask> getRelatedSubTasks(@PathVariable String taskName) throws SubTaskOperationException {
         return subTaskService.findSubTaskByTask(taskName);
     }
 
-    @GetMapping("GET/subtasks/{subTaskName}")
+    @GetMapping("admin/subtasks/by-name/{subTaskName}")
     SubTaskDto findBySubTaskName(@PathVariable String subTaskName) throws SubTaskOperationException {
         return mapperUtil.convertToDto(subTaskService.findByName(subTaskName));
     }
 
-    @DeleteMapping("DELETE/subtasks/{subTaskName}")
+    @DeleteMapping("admin/DELETE/subtasks/{subTaskName}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     ResponseEntity<Void> deleteSubTask(@PathVariable String subTaskName) throws SubTaskOperationException {
         subTaskService.delete(subTaskService.findByName(subTaskName));
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("PATCH/subtasks/{subTaskName}/basePrice/{basePrice}")
+    @PatchMapping("admin/edit-price/{subTaskName}/basePrice/{basePrice}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     ResponseEntity<Void> changeBasePrice(@PathVariable String subTaskName, @PathVariable Double basePrice) throws SubTaskOperationException {
         subTaskService.changeBasePrice(subTaskName, basePrice);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("PATCH/subtasks/{subTaskName}/description/{description}")
+    @PatchMapping("admin/edit-description/{subTaskName}/description/{description}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     ResponseEntity<Void> changeDescription(@PathVariable String subTaskName, @PathVariable String description) throws SubTaskOperationException {
         subTaskService.changeDescription(subTaskName, description);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("POST/subtasks/{taskName}")
-    List<SubTaskDto> findRelatedSubTasks(@PathVariable String taskName) throws TaskOperationException, SubTaskOperationException {
+    @GetMapping("admin/task/related-subtasks/{taskName}")
+    List<SubTaskDto> findRelatedSubTasks(@PathVariable String taskName) throws SubTaskOperationException {
         return subTaskService.findSubTaskByTask(taskName)
                 .stream()
                 .map(mapperUtil::convertToDto)

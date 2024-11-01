@@ -5,14 +5,12 @@ import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
 import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
 import ir.maktabsharif.finalproject.exception.UserOperationException;
-import ir.maktabsharif.finalproject.repository.CustomerRepository;
-import ir.maktabsharif.finalproject.repository.SpecialistRepository;
-import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.AdminDisplayService;
 import ir.maktabsharif.finalproject.service.AdminService;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,53 +25,55 @@ public class AdminController {
     private final AdminDisplayService adminDisplayService;
     private final MapperUtil mapperUtil;
 
-    @PatchMapping("PATCH/admin/specialist/{specialistFirstName}/{specialistLastName}")
-    ResponseEntity<Void> approveSpecialist(@PathVariable String specialistFirstName, @PathVariable String specialistLastName) throws SpecialistOperationException {
+    @PatchMapping("admin/approve-specialist/{specialistFirstName}/{specialistLastName}")
+//    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    ResponseEntity<String> approveSpecialist(@PathVariable String specialistFirstName, @PathVariable String specialistLastName) throws SpecialistOperationException {
         adminService.approveSpecialist(specialistFirstName, specialistLastName);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(specialistFirstName + " " + specialistLastName + " has been approved ");
     }
 
-    @GetMapping("GET/admin/user/firstnameASC")
+    @GetMapping("admin/user/firstName/ASC")
+//    @PreAuthorize("hasRole('ADMINISTRATOR')")
     List<UserDto> displayByFirstNameASC() throws UserOperationException {
-        return adminDisplayService.findAllUserByLastNameAsc().stream().map(mapperUtil::convertToDto).toList();
+        return adminDisplayService.findAllUserByFirstNameAsc().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/user/firstnameDESC")
+    @GetMapping("admin/user/firstName/DESC")
     List<UserDto> displayByLastnameASC() throws UserOperationException {
         return adminDisplayService.findAllUserByLastNameAsc().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/customer/creditASC")
+    @GetMapping("admin/customer/credit/ASC")
     List<CustomerDto> displayByCreditASC() throws CustomerOperationException {
         return adminDisplayService.displayByCreditASC().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/customer/creditDESC")
+    @GetMapping("admin/customer/credit/DESC")
     List<CustomerDto> displayByCreditDESC() throws CustomerOperationException {
         return adminDisplayService.displayByCreditDESC().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/specialist/scoreASC")
-    List<SpecialistDto> displayByScoreASC() throws SpecialistOperationException, CustomerOperationException {
+    @GetMapping("admin/specialist/score/ASC")
+    List<SpecialistDto> displayByScoreASC() throws SpecialistOperationException {
         return adminDisplayService.displayByScoreASC().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/specialist/scoreDESC")
+    @GetMapping("admin/specialist/score/DESC")
     List<SpecialistDto> displayByScoreDESC() throws SpecialistOperationException {
         return adminDisplayService.displayByScoreDESC().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/user/emailASC")
+    @GetMapping("admin/user/email/ASC")
     List<UserDto> displayByEmailASC() throws UserOperationException {
         return adminDisplayService.findAllUserByEmailAsc().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/user/emailDESC")
+    @GetMapping("admin/user/email/DESC")
     List<UserDto> displayByEmailDESC() throws UserOperationException {
         return adminDisplayService.findAllUserByEmailDesc().stream().map(mapperUtil::convertToDto).toList();
     }
 
-    @GetMapping("GET/admin/user/role?customer")
+    @GetMapping("admin/user/role/customer")
     List<UserDto> displayByCustomerRole() {
         return adminDisplayService.searchUsers(null, null, null, null, null, Role.CUSTOMER, null, null)
                 .stream()
@@ -81,7 +81,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping("GET/admin/user/role?specialist")
+    @GetMapping("admin/user/role/specialist")
     List<UserDto> displayBySpecialistRole() {
         return adminDisplayService.searchUsers(null, null, null, null, null, Role.SPECIALIST, null, null)
                 .stream()
@@ -89,7 +89,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping("GET/admin/specialist/ASC/{subTaskName}")
+    @GetMapping("admin/specialist/ASC/{subTaskName}")
     List<SpecialistDto> displayBySubTaskAndScoreASC(@PathVariable String subTaskName) {
         return adminDisplayService.searchSpecialists(null, null, null, null, 0, subTaskName, "score", true)
                 .stream()
@@ -97,7 +97,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping("GET/admin/specialist/DESC/{subTaskName}")
+    @GetMapping("admin/specialist/DESC/{subTaskName}")
     List<SpecialistDto> displayBySubTaskAndScoreDESC(@PathVariable String subTaskName) {
         return adminDisplayService.searchSpecialists(null, null, null, null, 0, subTaskName, "score", false)
                 .stream()
@@ -105,7 +105,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping()
+    @GetMapping("admin/customer/score/ASC")
     List<CustomerDto> displayByCustomerAndScoreASC() {
         return adminDisplayService.searchCustomers(null, null, null, null, 0, "credit", true)
                 .stream()
@@ -113,7 +113,7 @@ public class AdminController {
                 .toList();
     }
 
-    @GetMapping()
+    @GetMapping("admin/customer/score/DESC")
     List<CustomerDto> displayByCustomerAndScoreDESC() {
         return adminDisplayService.searchCustomers(null, null, null, null, 0, "credit", false)
                 .stream()
