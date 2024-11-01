@@ -16,6 +16,7 @@ import ir.maktabsharif.finalproject.specification.CustomerSpecification;
 import ir.maktabsharif.finalproject.specification.SpecialistSpecification;
 import ir.maktabsharif.finalproject.specification.UsersSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdminDisplayServiceImpl implements AdminDisplayService {
+    @Autowired
     private final UsersRepository usersRepository;
+    @Autowired
     private final CustomerRepository customerRepository;
+    @Autowired
     private final SpecialistRepository specialistRepository;
 
     @Override

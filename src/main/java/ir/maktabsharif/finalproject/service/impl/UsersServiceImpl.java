@@ -10,6 +10,7 @@ import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,6 @@ import java.util.List;
 public class UsersServiceImpl implements UsersService {
     private final ValidationUtil validationUtil;
     private final UsersRepository usersRepository;
-    private MapperUtil mapperUtil;
 
     @Override
     public void add(Users users) throws UserOperationException {

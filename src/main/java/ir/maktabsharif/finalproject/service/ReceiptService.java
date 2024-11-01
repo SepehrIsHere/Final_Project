@@ -1,6 +1,8 @@
 package ir.maktabsharif.finalproject.service;
 
+import ir.maktabsharif.finalproject.dto.OrderDto;
 import ir.maktabsharif.finalproject.dto.ReceiptDto;
+import ir.maktabsharif.finalproject.entities.Order;
 import ir.maktabsharif.finalproject.entities.Receipt;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +25,6 @@ public interface ReceiptService {
     List<ReceiptDto> findBySpecialist(String firstName, String lastName);
 
     ReceiptDto findByNameOfOrder(String nameOfOrder);
+
+    ReceiptDto createReceipt(String nameOfOrder,String specialistFirstName,String specialistLastName);
 }

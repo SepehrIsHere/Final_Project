@@ -8,20 +8,21 @@ import ir.maktabsharif.finalproject.exception.CustomerNotFoundException;
 import ir.maktabsharif.finalproject.exception.CustomerOperationException;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.service.CustomerService;
-import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private final ValidationUtil validationUtil;
     private final CustomerRepository customerRepository;
-    private final MapperUtil mapperUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Customer add(Customer customer) throws CustomerOperationException {
@@ -83,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .firstName(customerDto.getFirstname())
                 .lastName(customerDto.getLastname())
                 .username(customerDto.getUsername())
-                .password(customerDto.getPassword())
+                .password(passwordEncoder.encode(customerDto.getPassword()))
                 .email(customerDto.getEmail())
                 .role(Role.CUSTOMER)
                 .credit(0.0)
@@ -109,11 +110,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-
     @Override
-    public boolean doesCustomerExist(CustomerDto customerDto) {
-        Customer customer = mapperUtil.convertToEntity(customerDto);
-        return customer.getId() != null && customer.getFirstName() != null && customer.getLastName() != null;
+    public double getCustomerCredit(String customerFirstName, String customerLastName) throws CustomerOperationException {
+        Customer customer = findByFirstNameAndLastName(customerFirstName, customerLastName);
+        return customer.getCredit();
     }
-
 }

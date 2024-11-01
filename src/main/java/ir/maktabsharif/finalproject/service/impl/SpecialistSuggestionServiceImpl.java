@@ -66,7 +66,7 @@ public class SpecialistSuggestionServiceImpl implements SpecialistSuggestionServ
                 throw new SpecialistNotFoundException("Specialist Not Found ! ");
             }
         } else {
-            throw new OrderNotFoundException("Order Not Found !");
+            throw new OrderNotFoundException("Order  Not Found !");
         }
     }
 

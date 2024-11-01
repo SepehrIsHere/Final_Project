@@ -8,6 +8,7 @@ import ir.maktabsharif.finalproject.entities.Task;
 import ir.maktabsharif.finalproject.entities.Users;
 import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
+import ir.maktabsharif.finalproject.exception.SubTaskOperationException;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface AdminService {
 
     void changeDescriptionOfSubTask(SubTask subTask, String description);
 
-    void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask);
+    void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask) throws SpecialistOperationException, SubTaskOperationException;
 
     void approveSpecialist(String specialistFirstName,String specialistLastName) throws SpecialistOperationException;
 

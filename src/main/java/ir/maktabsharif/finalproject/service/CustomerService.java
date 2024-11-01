@@ -23,5 +23,5 @@ public interface CustomerService {
 
     CustomerDto createCustomer(CustomerDto customerDto) throws CustomerOperationException;
 
-    boolean doesCustomerExist(CustomerDto customerDto);
+    double getCustomerCredit(String customerFirstName,String customerLastName) throws CustomerOperationException;
 }

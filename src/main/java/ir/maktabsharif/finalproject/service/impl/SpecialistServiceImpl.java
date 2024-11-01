@@ -13,6 +13,7 @@ import ir.maktabsharif.finalproject.service.*;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SpecialistServiceImpl implements SpecialistService {
     private final ValidationUtil validationUtil;
     private final SpecialistRepository specialistRepository;
+    private final PasswordEncoder passwordEncoder;
     private final MapperUtil mapperUtil;
 
     @Override
@@ -32,7 +34,7 @@ public class SpecialistServiceImpl implements SpecialistService {
                 .lastName(specialistDto.getLastname())
                 .email(specialistDto.getEmail())
                 .username(specialistDto.getUsername())
-                .password(specialistDto.getPassword())
+                .password(passwordEncoder.encode(specialistDto.getPassword()))
                 .role(Role.SPECIALIST)
                 .specialistStatus(SpecialistStatus.PENDING_APPROVAL)
                 .score(0.0)

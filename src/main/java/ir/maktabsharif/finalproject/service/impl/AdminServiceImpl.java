@@ -1,26 +1,15 @@
 package ir.maktabsharif.finalproject.service.impl;
 
 
-import ir.maktabsharif.finalproject.dto.SpecialistDto;
 import ir.maktabsharif.finalproject.entities.*;
-import ir.maktabsharif.finalproject.enumerations.Role;
 import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
-import ir.maktabsharif.finalproject.exception.NotFoundByFilterException;
-import ir.maktabsharif.finalproject.exception.SpecialistNotFoundException;
-import ir.maktabsharif.finalproject.exception.SpecialistOperationException;
-import ir.maktabsharif.finalproject.exception.SubTaskNotFoundException;
-import ir.maktabsharif.finalproject.repository.CustomerRepository;
+import ir.maktabsharif.finalproject.exception.*;
 import ir.maktabsharif.finalproject.repository.SpecialistRepository;
 import ir.maktabsharif.finalproject.repository.SubTaskRepository;
-import ir.maktabsharif.finalproject.repository.UsersRepository;
 import ir.maktabsharif.finalproject.service.AdminService;
 import ir.maktabsharif.finalproject.service.SpecialistService;
 import ir.maktabsharif.finalproject.service.SubTaskService;
-import ir.maktabsharif.finalproject.service.TaskService;
-import ir.maktabsharif.finalproject.specification.UsersSpecification;
-import ir.maktabsharif.finalproject.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,17 +18,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
-    private final TaskService taskService;
     private final SpecialistService specialistService;
     private final SpecialistRepository specialistRepository;
     private final SubTaskRepository subTaskRepository;
     private final SubTaskService subTaskService;
-    private final ValidationUtil validationUtil;
-
-
 
     @Override
-    public void addSubTaskToSpecialist(String specialistFirstName, String specialistLastName,String subTaskName) throws SpecialistOperationException {
+    public void addSubTaskToSpecialist(String specialistFirstName, String specialistLastName, String subTaskName) throws SpecialistOperationException {
         Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
         SubTask subTask = subTaskRepository.findByName(subTaskName);
         if (specialist != null) {
@@ -59,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void removeSubTaskFromSpecialist(String specialistFirstName, String specialistLastName,String subTaskName) throws SpecialistOperationException {
+    public void removeSubTaskFromSpecialist(String specialistFirstName, String specialistLastName, String subTaskName) throws SpecialistOperationException {
         Specialist specialist = specialistRepository.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
         SubTask subTask = subTaskRepository.findByName(subTaskName);
         if (specialist != null) {
@@ -98,42 +83,40 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void approveSpecialist(String specialistFirstName,String specialistLastName) throws SpecialistOperationException {
-        try{
-            Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName,specialistLastName);
-            if(specialist != null){
+    public void approveSpecialist(String specialistFirstName, String specialistLastName) throws SpecialistOperationException {
+        try {
+            Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
+            if (specialist != null) {
                 specialist.setSpecialistStatus(SpecialistStatus.APPROVED);
                 specialistService.update(specialist);
-            }else{
-                throw new SpecialistNotFoundException("Specialist Not Found" );
+            } else {
+                throw new SpecialistNotFoundException("Specialist Not Found");
             }
-        }catch (Exception e){
-            throw new SpecialistOperationException("An error occured approving Specialist",e);
+        } catch (Exception e) {
+            throw new SpecialistOperationException("An error occured approving Specialist", e);
         }
     }
 
     @Override
-    public void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask) {
-        try {
-            List<Specialist> specialists = subTask.getSpecialists();
-            for (Specialist s : specialists) {
-                if (s.equals(specialist)) {
-                    specialists.remove(s);
-                    subTaskService.update(subTask);
-                }
+    public void removeSpecialistFromSubTask(Specialist specialist, SubTask subTask) throws SpecialistOperationException, SubTaskOperationException {
+        List<Specialist> specialists = subTask.getSpecialists();
+        boolean specialistFound = false;
+
+        for (Specialist s : new ArrayList<>(specialists)) {
+            if (s.equals(specialist)) {
+                specialists.remove(s);
+                specialistFound = true;
+                break;
             }
-            List<SubTask> subTasks = specialist.getSubTasks();
-            for (SubTask s : subTasks) {
-                if (s.equals(subTask)) {
-                    subTasks.remove(subTask);
-                    specialistService.update(specialist);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("An error occured while removing a subtask " + e.getMessage());
+        }
+        if (!specialistFound) {
+            throw new SpecialistNotFoundException("Specialist not found in the specified subtask.");
+        }
+        subTaskService.update(subTask);
+        List<SubTask> subTasks = specialist.getSubTasks();
+        if (subTasks != null) {
+            subTasks.removeIf(s -> s.equals(subTask));
+            specialistService.update(specialist);
         }
     }
-
 }
-
-

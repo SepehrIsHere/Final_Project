@@ -96,6 +96,8 @@ public class CommentServiceImpl implements CommentService {
                     .ratingPoint(commentDto.getRating())
                     .text(commentDto.getDescription())
                     .build();
+            specialist.setScore(specialist.getScore() + commentDto.getRating());
+            specialistService.update(specialist);
             add(comment);
             return comment;
         } catch (Exception e) {

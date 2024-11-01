@@ -1,11 +1,9 @@
 package ir.maktabsharif.finalproject.service.impl;
 
-import ir.maktabsharif.finalproject.dto.CustomerDto;
 import ir.maktabsharif.finalproject.dto.OrderDto;
-import ir.maktabsharif.finalproject.dto.SubTaskDto;
-import ir.maktabsharif.finalproject.dto.SuggestionDto;
 import ir.maktabsharif.finalproject.entities.*;
 import ir.maktabsharif.finalproject.enumerations.OrderStatus;
+import ir.maktabsharif.finalproject.enumerations.SpecialistStatus;
 import ir.maktabsharif.finalproject.exception.*;
 import ir.maktabsharif.finalproject.repository.CustomerRepository;
 import ir.maktabsharif.finalproject.repository.OrderRepository;
@@ -13,6 +11,8 @@ import ir.maktabsharif.finalproject.repository.SubTaskRepository;
 import ir.maktabsharif.finalproject.service.*;
 import ir.maktabsharif.finalproject.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,9 +31,10 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private final SpecialistService specialistService;
     private final SubTaskRepository subTaskRepository;
     private final MapperUtil mapperUtil;
+    private final Logger logger = LoggerFactory.getLogger(CustomerOrderServiceImpl.class);
 
     @Override
-    public OrderDto placeAnOrder(OrderDto orderDto) throws OrderOperationException {
+    public OrderDto placeAnOrder(OrderDto orderDto) {
         Customer customer = customerRepository.findCustomerByFirstNameAndLastName(orderDto.getCustomerFirstName(), orderDto.getCustomerLastName());
         if (customer != null) {
             SubTask subTask = subTaskRepository.findByName(orderDto.getSubTaskName());
@@ -47,6 +48,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                         .status(OrderStatus.WAITING_FOR_SPECIALIST_SELECTION)
                         .subTask(subTask)
                         .build();
+                if(LocalDate.now().isBefore(order.getDateOfService())) {
+                    throw new InvalidDateException("The date is invalid");
+                }
                 orderRepository.save(order);
                 return orderDto;
             } else {
@@ -58,18 +62,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void removeAnOrder(OrderDto orderDto) throws OrderOperationException {
-        Order order = findOrder(orderDto);
-        if (order != null) {
-            orderService.delete(order);
-        } else {
-            throw new OrderNotFoundException("Order Not Found ! ");
-        }
-    }
-
-    @Override
-    public List<OrderDto> findCustomersOrders(String customerFirstName,String customerLastName) throws CustomerOperationException {
-        Customer customer = customerService.findByFirstNameAndLastName(customerFirstName,customerLastName);
+    public List<OrderDto> findCustomersOrders(String customerFirstName, String customerLastName) throws CustomerOperationException {
+        Customer customer = customerService.findByFirstNameAndLastName(customerFirstName, customerLastName);
         if (customer != null) {
             List<Order> customerOrders = customer.getOrders();
             if (customerOrders != null && !customerOrders.isEmpty()) {
@@ -87,58 +81,59 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public void changeOrderStatusToStarted(String nameOfOrder,String specialistFirstName,String specialistLastName) throws OrderOperationException {
+    public void pickSpecialistForOrder(String specialistFirstName, String specialistLastName, String nameOfOrder) throws OrderOperationException {
+        try {
+            Order order = orderService.findByNameOfOrder(nameOfOrder);
+            Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName, specialistLastName);
+            Suggestions suggestions = suggestionsService.findSuggestionsByNameOfOrderAndSpecialist(nameOfOrder, specialistFirstName, specialistLastName);
+            if (specialist.getSpecialistStatus().equals(SpecialistStatus.APPROVED)) {
+                order.setSpecialist(specialist);
+                order.setStatus(OrderStatus.WAITING_FOR_SPECIALIST_ARRIVAL);
+                specialistService.update(specialist);
+                logger.info("status before updating : {}", order.getStatus());
+                orderService.update(order);
+                suggestions.setOrder(order);
+                logger.info("status after updating : {}", order.getStatus());
+                suggestionsService.update(suggestions);
+            } else {
+                throw new InvalidSpecialistStatus("Specialist cant be set for order\nIt is not approved");
+            }
+        } catch (Exception e) {
+            throw new OrderOperationException("An error occured while trying to pick specialist", e);
+        }
+    }
+
+    @Override
+    public void changeOrderStatusToStarted(String nameOfOrder, String specialistFirstName, String specialistLastName) throws OrderOperationException, SuggestionOperationException {
         try {
             Order order = orderService.findByNameOfOrder(nameOfOrder);
             Suggestions suggestions = suggestionsService.findSuggestionsByNameOfOrderAndSpecialist(nameOfOrder, specialistFirstName, specialistLastName);
-            Specialist specialist = specialistService.findByFirstNameAndLastName(specialistFirstName,specialistLastName);
-            if (order != null) {
-                if (suggestions != null) {
-                    if (LocalDate.now().isAfter(suggestions.getSuggestedDate())) {
-                        order.setStatus(OrderStatus.STARTED);
-                        order.setSpecialist(specialist);
-                        orderService.update(order);
-                        Receipt receipt = Receipt.builder()
-                                .totalAmount(order.getSuggestedPrice())
-                                .specialistFirstName(order.getSpecialist().getFirstName())
-                                .specialistLastName(order.getSpecialist().getLastName())
-                                .dateOfService(suggestions.getSuggestedDate())
-                                .timeOfService(suggestions.getWorkTime())
-                                .nameOfOrder(order.getNameOfOrder())
-                                .customerFirstName(order.getCustomer().getFirstName())
-                                .customerLastName(order.getCustomer().getLastName())
-                                .build();
-                        receiptService.add(receipt);
-                    } else {
-                        throw new InvalidDateException("You can change to start after the date not before");
-                    }
-                } else {
-                    throw new SuggestionNotFound("Suggestion Not Found ! ");
-                }
-            } else {
-                throw new OrderNotFoundException("Order Not Found ! ");
+            if (LocalDate.now().isBefore(suggestions.getSuggestedDate())) {
+                throw new InvalidDateException("You can change to start after the date not before");
             }
+            if (!order.getStatus().equals(OrderStatus.WAITING_FOR_SPECIALIST_ARRIVAL)) {
+                throw new InvalidOrderStatus("Order must be in waiting for arrival so that it cant be started");
+            }
+            order.setStatus(OrderStatus.STARTED);
+            orderService.update(order);
         } catch (Exception e) {
-            throw new OrderOperationException("An error occured while trying to change order status to started", e);
+            throw new OrderOperationException("An error occured while trying to change order status to started" + e.getMessage(), e);
         }
     }
 
     @Override
     public void changeOrderStatusToFinished(String nameOfOrder) throws OrderOperationException {
-        Order order = orderService.findByNameOfOrder(nameOfOrder);
-        if (order != null) {
-            if (order.getStatus().equals(OrderStatus.STARTED)) {
-                order.setStatus(OrderStatus.COMPLETED);
-                orderService.update(order);
-            } else {
-                throw new OrderStatusException("Order Status is invalid !");
+        try{
+            Order order = orderService.findByNameOfOrder(nameOfOrder);
+            logger.info("status before updating to finished: {}", order.getStatus());
+            if (!order.getStatus().equals(OrderStatus.STARTED)) {
+                throw new InvalidOrderStatus("Order has not been started");
             }
-        } else {
-            throw new OrderNotFoundException("Order Not Found ! ");
+            order.setStatus(OrderStatus.COMPLETED);
+            orderService.update(order);
+            logger.info("status after updating to finished: {}", order.getStatus());
+        }catch (Exception e){
+            throw new OrderOperationException("An error occured while trying to change order status to finished" + e.getMessage(), e);
         }
-    }
-
-    private Order findOrder(OrderDto orderDto) {
-        return orderService.findByNameOfOrder(orderDto.getNameOfOrder());
     }
 }
